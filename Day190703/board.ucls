@@ -55,6 +55,15 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
+  <class id="7" language="java" name="kr.co.bit.obj2.Board" project="Day190703" 
+    file="/Day190703/src/kr/co/bit/obj2/Board.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-53" y="334"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

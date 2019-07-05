@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 
 public class Register {
-	Scanner sc = new Scanner();
+	Scanner sc = new Scanner(System.in);
 	public Domain domain;
 	
 	public Register() {
@@ -27,7 +27,7 @@ public class Register {
 		System.out.println("번호를 선택해 주세요.. ");
 		int choice = sc.nextInt();
 		
-		public int register(int choice) {
+		public void register(int choice) {
 			if(choice == 1) {
 			} else if (choice == 2) {
 				
@@ -45,8 +45,3 @@ public class Register {
 		}
 	}
 
-
-
-	
-	
-}

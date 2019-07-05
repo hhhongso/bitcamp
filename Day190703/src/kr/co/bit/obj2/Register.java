@@ -11,8 +11,7 @@ public class Register extends Board {
 	public Register() {
 		//초기화: 0/null값으로 자동 초기화
 	}
-	
-			//setNO(): 입력받은 게시글 번호가 정수형이 아닐 때를 걸러내기 위함 
+	 
 	public void setNo() throws IOException {
 		System.out.println("게시글 번호 입력: ");
 		no = Integer.parseInt(br.readLine()); //readline >> int 로 형변환

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="kr.co.bit.obj2.Board_Executer" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Board_Executer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="285" y="234"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="2" language="java" name="kr.co.bit.obj2.BoardInter" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/BoardInter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="619" y="944"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="3" language="java" name="kr.co.bit.obj2.Update" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Update.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="289" y="724"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="kr.co.bit.obj2.PrintList" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/PrintList.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="454" y="688"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="kr.co.bit.obj2.Board" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Board.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="674" y="378"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="kr.co.bit.obj2.Search" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Search.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="619" y="715"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="kr.co.bit.obj2.Delete" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="784" y="706"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="kr.co.bit.obj2.BoardPoly" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/BoardPoly.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="468" y="252"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="kr.co.bit.obj2.Register" project="Day190704" 
+    file="/Day190704/src/kr/co/bit/obj2/Register.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="949" y="706"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <realization id="10">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <generalization id="11">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <realization id="13">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <generalization id="14">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <realization id="15">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="17">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <realization id="18">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="19">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

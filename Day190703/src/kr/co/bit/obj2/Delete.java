@@ -26,6 +26,14 @@ public class Delete {
 		sql = "DELETE FROM BOARD WHERE TITLE = ? ";
 		
 	}
+	
+	public void deleteQuery() {
+		conn = Register.getConnection();
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, delTitle);
+
+		count = pstmt.executeUpdate();
+	}
 	public void deleteClose() {
 			try {
 				pstmt.close();
@@ -39,11 +47,7 @@ public class Delete {
 	public void deleteProcess() throws SQLException, IOException {
 		deleteTitle();
 		deleteSql();
-		conn = Register.getConnection();
-		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1, delTitle);
-
-		count = pstmt.executeUpdate();
+		
 		if(count == 0) {
 			System.out.println("삭제할 게시글이 없습니다. ");
 		} else {

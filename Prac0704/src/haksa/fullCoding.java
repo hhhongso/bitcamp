@@ -30,27 +30,23 @@ public class fullCoding {
 										System.out.println("1. 학생등록 2. 교수등록 3. 관리자등록 4. 이전메뉴로");
 										protocol = Integer.parseInt(bf.readLine());
 										if(protocol == 1) { //학생등록
-											System.out.println("학생 번호:이름:나이:학번");
-											String regitStudent = bf.readLine();
-											StringTokenizer stz = new StringTokenizer(regitStudent, ":");
-											while(stz.hasMoreTokens()) {
-												
-												System.out.println(stz.nextToken());
-											}
+											System.out.println("학생 번호: ");									
+											int no = Integer.parseInt(bf.readLine());
+											System.out.println("학생 이름: ");
+											String name = bf.readLine();
+											System.out.println("학생 나이: ");
+											String age = bf.readLine();
+											System.out.println("학생 학번: ");
+											String idNum = bf.readLine();
 											
-//											
-//											int no = Integer.parseInt(bf.readLine());
 //											System.out.println("학생 이름,나이: ");
 //											String nameAge = bf.readLine();
 //											int indexI = nameAge.indexOf(","); // indexI = 5;
 //											String name = nameAge.substring(0, indexI);
 //											String age = nameAge.substring(indexI+1);
-//											System.out.println("학생 학번: ");
-//											String idNum = bf.readLine();
-		
-											
+	
 											//3-1. 문장준비
-											String sql = "INSERT INTO HAKSASTUDENT (NO, NAME, AGE, IDNUM, TYPE) VALUES (?,?,?,?,?)";
+											String sql = "INSERT INTO HAKSASTUDENT (NO, NAME, AGE, IDNUM) VALUES (?,?,?,?)";
 											//3-2. 쿼리준비							
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setInt(1, no);
@@ -80,7 +76,7 @@ public class fullCoding {
 											System.out.println("교수 과목: ");
 											String subject = bf.readLine();
 																		
-											String sql = "INSERT INTO HAKSAPROFESSOR (NO,AGE, NAME, SUBJECT) VALUES (?,?,?,?)";
+											String sql = "INSERT INTO HAKSAPROFESSOR (NO, NAME, AGE, SUBJECT) VALUES (?,?,?,?)";
 																		
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setInt(1, no);
@@ -108,7 +104,7 @@ public class fullCoding {
 											System.out.println("관리자 부서: ");
 											String part = bf.readLine();
 											
-											String sql = "INSERT INTO HAKSAMANAGER (NO,AGE, NAME, PART) VALUES (?,?,?,?)";
+											String sql = "INSERT INTO HAKSAMANAGER (NO, NAME, AGE, PART) VALUES (?,?,?,?)";
 																		
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setInt(1, no);
@@ -138,7 +134,7 @@ public class fullCoding {
 										if(protocol == 1) { //학생찾기
 											System.out.println("찾을 이름을 입력하세요: ");
 											String searchName = bf.readLine();
-											System.out.println("번호 \t 나이 \t 이름 \t 학번 ");
+											System.out.println("번호 \t 이름 \t 나이 \t 학번 ");
 											String sql = "SELECT NO, NAME, AGE, IDNUM FROM HAKSASTUDENT WHERE NAME = ?";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setString(1, searchName);
@@ -156,7 +152,7 @@ public class fullCoding {
 										else if (protocol == 2) { //교수찾기
 											System.out.println("찾을 이름을 입력하세요: ");
 											String searchName = bf.readLine();
-											String sql = "SELECT NO, AGE, NAME, SUBJECT FROM HAKSAPROFESSOR WHERE NAME = ?";
+											String sql = "SELECT NO, NAME, AGE, SUBJECT FROM HAKSAPROFESSOR WHERE NAME = ?";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setString(1, searchName);
 											
@@ -167,14 +163,14 @@ public class fullCoding {
 												String name = rs.getString("name");
 												String subject = rs.getString("subject");
 												
-												System.out.println("번호 \t 나이 \t 이름 \t 과목 ");
-												System.out.println(no + "\t" + age + "\t" + name + "\t" + subject);
+												System.out.println("번호 \t 이름 \t 나이 \t 과목 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + subject);
 											}
 										} //교수찾기
 										else if (protocol == 3) { //관리자찾기
 											System.out.println("찾을 이름을 입력하세요: ");
 											String searchName = bf.readLine();
-											String sql = "SELECT NO, AGE, NAME, PART FROM HAKSAMANAGER WHERE NAME = ?";
+											String sql = "SELECT NO, NAME, AGE, PART FROM HAKSAMANAGER WHERE NAME = ?";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											pstmt.setString(1, searchName);
 											
@@ -185,8 +181,8 @@ public class fullCoding {
 												String name = rs.getString("name");
 												String part = rs.getString("part");
 												
-												System.out.println("번호 \t 나이 \t 이름 \t 부서 ");
-												System.out.println(no + "\t" + age + "\t" + name + "\t" + part);
+												System.out.println("번호 \t 이름 \t 나이 \t 부서 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + part);
 											}
 										}//관리자찾기
 										
@@ -218,16 +214,53 @@ public class fullCoding {
 										}
 										
 									}//삭제
-									else if (protocol == 4) {
+									else if (protocol == 4) { //수정
+										System.out.println("수정할 이름을 입력하세요: ");
+										String searchName = bf.readLine();
+										String sql = "SELECT NO, NAME, AGE, IDNUM FROM HAKSASTUDENT WHERE NAME = ?";
+										PreparedStatement pstmt = conn.prepareStatement(sql);
+										pstmt.setString(1, searchName);
 										
+										ResultSet rs = pstmt.executeQuery();
+										while(rs.next()) {
+											int no = rs.getInt("no");
+											String age = rs.getString("age");
+											String name = rs.getString("name");
+											String idNum = rs.getString("idNum");
+											
+											System.out.println("번호 \t 이름 \t 나이 \t 학번 ");
+											System.out.println(no + "\t" + name + "\t" + age + "\t" + idNum);
+	
+												
+											System.out.println("수정할 내용을 입력하세요..");
+											System.out.println("학생 번호:이름:나이:학번");
+											String updateStu = bf.readLine();
+											sql = "UPDATE HAKSASTUDENT SET NO ";
+											StringTokenizer stz = new StringTokenizer(updateStu, ":");
+											
+											while(stz.hasMoreTokens()) {											
+												no = Integer.parseInt(stz.nextToken());
+												age = stz.nextToken();
+												name = stz.nextToken();
+												idNum = stz.nextToken();																			
+												
+												System.out.println("번호 \t 이름 \t 나이 \t 학번 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + idNum);
+												
+												System.out.println("학생 정보 업데이트 완료");
+											}
+										}
+										rs.close();
+										pstmt.close();
+										conn.close();
 									}//수정
-									else if (protocol == 5) {
+									else if (protocol == 5) {//전체출력
 										
-										System.out.println("찾는 타입을 입력하세요: 1. 학생 2. 교수 3. 관리자");
+										System.out.println("찾는 타입을 입력하세요: 1. 학생 2. 교수 3. 관리자 4. 전체");
 										protocol = Integer.parseInt(bf.readLine());
 										
-										if(protocol == 1) {
-											String sql = "SELECT NO, AGE, NAME, IDNUM FROM HAKSASTUDENT";
+										if(protocol == 1) {//학생전체출력
+											String sql = "SELECT NO, NAME, AGE, IDNUM FROM HAKSASTUDENT";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											ResultSet rs = pstmt.executeQuery();
 											
@@ -236,12 +269,12 @@ public class fullCoding {
 												String age = rs.getString("age");
 												String name = rs.getString("name");
 												String idNum = rs.getString("idNum");
-												System.out.println("번호 \t 나이 \t 이름 \t 학번 ");
-												System.out.println(no + "\t" + age + "\t" + name + "\t" + idNum);
+												System.out.println("번호 \t 이름 \t 나이 \t 학번 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + idNum);
 											}
 										} //학생전체출력
 										else if (protocol == 2) {
-											String sql = "SELECT NO, AGE, NAME, SUBJECT FROM HAKSAPROFESSOR";
+											String sql = "SELECT NO, NAME, AGE, SUBJECT FROM HAKSAPROFESSOR";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											ResultSet rs = pstmt.executeQuery();
 											
@@ -250,12 +283,12 @@ public class fullCoding {
 												String age = rs.getString("age");
 												String name = rs.getString("name");
 												String subject = rs.getString("subject");
-												System.out.println("번호 \t 나이 \t 이름 \t 과목 ");
-												System.out.println(no + "\t" + age + "\t" + name + "\t" + subject);
+												System.out.println("번호 \t 이름 \t 나이 \t 과목 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + subject);
 											}
 										}
 										else if (protocol == 3) {
-											String sql = "SELECT NO, AGE, NAME, PART FROM HAKSAMANAGER";
+											String sql = "SELECT NO, NAME, AGE, PART FROM HAKSAMANAGER";
 											PreparedStatement pstmt = conn.prepareStatement(sql);
 											ResultSet rs = pstmt.executeQuery();
 											
@@ -264,8 +297,8 @@ public class fullCoding {
 												String age = rs.getString("age");
 												String name = rs.getString("name");
 												String part = rs.getString("part");
-												System.out.println("번호 \t 나이 \t 이름 \t 부서 ");
-												System.out.println(no + "\t" + age + "\t" + name + "\t" + part);
+												System.out.println("번호 \t 이름 \t 나이 \t 부서 ");
+												System.out.println(no + "\t" + name + "\t" + age + "\t" + part);
 										}
 									}//관리자 전체출력
 										

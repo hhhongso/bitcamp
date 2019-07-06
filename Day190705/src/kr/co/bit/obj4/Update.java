@@ -16,6 +16,18 @@ public class Update extends Poly {
 	}
 	
 	@Override
+	public void set() {
+		try {
+			System.out.print("수정할 아이디: ");
+			String editID = br.readLine();
+			System.out.print("수정할 비밀번호: ");
+			String editPW = br.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
 	protected void setSql() {
 		sql = "UPDATE MEMBER SET ID = ?, PW = ? WHERE ID = ?";
 	}

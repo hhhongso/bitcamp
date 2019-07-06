@@ -4,7 +4,6 @@ public class Poly extends Function {
 
 	@Override
 	protected void set() {
-		
 	}
 	
 	@Override

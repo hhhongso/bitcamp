@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="kr.co.bit.obj5.Logout" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Logout.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="1" language="java" name="kr.co.bit.obj5_done.Logout" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Logout.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="297" y="398"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="2" language="java" name="kr.co.bit.obj5.MemberInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/MemberInter.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="2" language="java" name="kr.co.bit.obj5_done.MemberInter" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/MemberInter.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="135" width="133" x="661" y="599"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="3" language="java" name="kr.co.bit.obj5.MemberPoly" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/MemberPoly.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="kr.co.bit.obj5_done.MemberPoly" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/MemberPoly.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="331" y="88"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="4" language="java" name="kr.co.bit.obj5.LoginInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/LoginInter.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="4" language="java" name="kr.co.bit.obj5_done.LoginInter" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/LoginInter.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="437" y="636"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="5" language="java" name="kr.co.bit.obj5.Function" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Function.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="kr.co.bit.obj5_done.Function" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Function.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="829" y="151"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="kr.co.bit.obj5.Delete" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="kr.co.bit.obj5_done.Delete" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="579" y="425"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="kr.co.bit.obj5.Register" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Register.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="kr.co.bit.obj5_done.Register" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Register.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1148" y="425"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -64,8 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="8" language="java" name="kr.co.bit.obj5.SetInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/SetInter.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="8" language="java" name="kr.co.bit.obj5_done.SetInter" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/SetInter.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1006" y="636"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -73,8 +73,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="9" language="java" name="kr.co.bit.obj5.PrintList" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/PrintList.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="kr.co.bit.obj5_done.PrintList" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/PrintList.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="721" y="416"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -82,8 +82,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="kr.co.bit.obj5.Update" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Update.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="kr.co.bit.obj5_done.Update" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Update.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="437" y="443"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -91,8 +91,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="kr.co.bit.obj5.ExecuterDB" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/ExecuterDB.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="11" language="java" name="kr.co.bit.obj5_done.ExecuterDB" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/ExecuterDB.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="657" y="61"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -100,8 +100,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="kr.co.bit.obj5.Search" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Search.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="kr.co.bit.obj5_done.Search" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Search.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="863" y="434"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -109,8 +109,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="kr.co.bit.obj5.Login" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5/Login.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="13" language="java" name="kr.co.bit.obj5_done.Login" project="Day190705" 
+    file="/Day190705/src/kr/co/bit/obj5_done/Login.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1006" y="443"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -119,81 +119,81 @@
     </display>  
   </class>  
   <realization id="14">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
   </realization>  
   <generalization id="15">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
-  <realization id="16">    
+  <generalization id="16">    
     <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <realization id="17">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="18">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <generalization id="19">    
-    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
-  <generalization id="20">    
+  <realization id="17">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="19">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
-  <realization id="21">    
-    <end type="SOURCE" refId="1"/>    
+  <realization id="20">    
+    <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="4"/>  
   </realization>  
-  <realization id="22">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <realization id="23">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <realization id="24">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <generalization id="25">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="26">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <realization id="27">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <realization id="28">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <generalization id="29">    
+  <generalization id="21">    
     <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
-  <generalization id="30">    
+  <realization id="22">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <realization id="23">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="24">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="25">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="26">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="27">    
     <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="28">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <realization id="29">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <generalization id="30">    
+    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
   <realization id="31">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="2"/>  
   </realization>  
-  <realization id="32">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

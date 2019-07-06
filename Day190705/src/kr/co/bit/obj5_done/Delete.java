@@ -1,4 +1,4 @@
-package kr.co.bit.obj5;
+package kr.co.bit.obj5_done;
 // 탈퇴는 로그인인 중에서 진행되어야 함 > set 필요없음.  
 //로그인 상태가 아니라면, '로그인 중이 아닙니다.'
 

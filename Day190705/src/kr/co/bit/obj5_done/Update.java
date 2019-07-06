@@ -1,4 +1,4 @@
-package kr.co.bit.obj5;
+package kr.co.bit.obj5_done;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -59,19 +59,16 @@ public class Update extends Function implements LoginInter, SetInter, MemberInte
 			System.out.println(count + "건 아이디, 비밀번호 변경완료 ");
 			session = editID;
 		}
-
 	}
 
 	@Override
 	public void close() throws SQLException {
 		pstmt.close();
 		conn.close();
-
 	}
 
 	public void process() {
-		isLogin();
-		
+		isLogin();	
 	}
 	
 

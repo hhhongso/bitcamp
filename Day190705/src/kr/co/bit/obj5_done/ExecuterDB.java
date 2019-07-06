@@ -1,4 +1,4 @@
-package kr.co.bit.obj5;
+package kr.co.bit.obj5_done;
 // 등록 후 로그인 필요 > 탈퇴, 수정, 로그아웃 
 // 등록 후 로그인 없이 > 목록보기, 아이디찾기 
 

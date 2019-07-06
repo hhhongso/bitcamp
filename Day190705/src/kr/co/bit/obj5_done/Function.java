@@ -1,4 +1,4 @@
-package kr.co.bit.obj5;
+package kr.co.bit.obj5_done;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

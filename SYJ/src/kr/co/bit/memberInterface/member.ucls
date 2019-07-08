@@ -1,199 +1,216 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="kr.co.bit.obj5_done.Logout" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Logout.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="297" y="398"/>    
+  <class id="1" language="java" name="kr.co.bit.memberInterface.Main" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Main.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="119" x="165" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="2" language="java" name="kr.co.bit.obj5_done.MemberInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/MemberInter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="133" x="654" y="606"/>    
-    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="3" language="java" name="kr.co.bit.obj5_done.MemberPoly" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/MemberPoly.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="331" y="88"/>    
+  <class id="2" language="java" name="kr.co.bit.memberInterface.List" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/List.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="122" x="276" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="4" language="java" name="kr.co.bit.obj5_done.LoginInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/LoginInter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="437" y="636"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="5" language="java" name="kr.co.bit.obj5_done.Function" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Function.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="718" y="142"/>    
+  <class id="3" language="java" name="kr.co.bit.memberInterface.Login" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Login.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="163" x="800" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="kr.co.bit.obj5_done.Delete" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="579" y="425"/>    
+  <class id="4" language="java" name="kr.co.bit.memberInterface.Member" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Member.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="248" x="666" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="kr.co.bit.obj5_done.Register" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Register.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1148" y="425"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="8" language="java" name="kr.co.bit.obj5_done.SetInter" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/SetInter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1006" y="636"/>    
+  <interface id="5" language="java" name="kr.co.bit.memberInterface.Process" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Process.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="119" x="597" y="657"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="9" language="java" name="kr.co.bit.obj5_done.PrintList" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/PrintList.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="721" y="416"/>    
+  <class id="6" language="java" name="kr.co.bit.memberInterface.Poly" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Poly.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="202" x="374" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="kr.co.bit.obj5_done.Update" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Update.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="437" y="443"/>    
+  <class id="7" language="java" name="kr.co.bit.memberInterface.Logout" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Logout.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="119" x="438" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="kr.co.bit.obj5_done.ExecuterDB" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/ExecuterDB.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="158" y="44"/>    
+  <class id="8" language="java" name="kr.co.bit.memberInterface.Search" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Search.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="122" x="114" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="kr.co.bit.obj5_done.Search" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Search.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="863" y="434"/>    
+  <interface id="9" language="java" name="kr.co.bit.memberInterface.PrintMember" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/PrintMember.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="122" x="276" y="657"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="10" language="java" name="kr.co.bit.memberInterface.Register" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Register.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="129" x="1206" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="kr.co.bit.obj5_done.Login" project="Day190705" 
-    file="/Day190705/src/kr/co/bit/obj5_done/Login.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1006" y="443"/>    
+  <interface id="11" language="java" name="kr.co.bit.memberInterface.Insert" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Insert.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="119" x="1104" y="657"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="12" language="java" name="kr.co.bit.memberInterface.Session" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Session.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="163" x="800" y="657"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="13" language="java" name="kr.co.bit.memberInterface.Update" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Update.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="163" x="1003" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <realization id="14">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <generalization id="15">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="16">    
+  <class id="14" language="java" name="kr.co.bit.memberInterface.Delete" project="SYJ" 
+    file="/SYJ/src/kr/co/bit/memberInterface/Delete.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="163" x="597" y="356"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <realization id="15">    
     <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="5"/>  
-  </generalization>  
+  </realization>  
+  <realization id="16">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
   <realization id="17">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="12"/>  
   </realization>  
-  <generalization id="18">    
+  <realization id="18">    
     <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="19">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <realization id="19">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
   <realization id="20">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
   </realization>  
   <generalization id="21">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="5"/>  
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="4"/>  
   </generalization>  
-  <realization id="22">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
   <realization id="23">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
   </realization>  
   <realization id="24">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <realization id="25">    
     <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="TARGET" refId="5"/>  
   </realization>  
+  <generalization id="25">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
   <realization id="26">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="9"/>  
   </realization>  
   <realization id="27">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="2"/>  
-  </realization>  
-  <realization id="28">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="29">    
     <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <generalization id="30">    
-    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="5"/>  
+  </realization>  
+  <generalization id="28">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="4"/>  
   </generalization>  
+  <realization id="29">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <realization id="30">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
   <realization id="31">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="11"/>  
   </realization>  
   <generalization id="32">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="4"/>  
   </generalization>  
+  <generalization id="33">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <realization id="34">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <realization id="35">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

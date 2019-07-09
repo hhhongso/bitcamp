@@ -9,6 +9,8 @@ import java.util.function.ObjIntConsumer;
 //Consumer 인터페이스[리턴타입 없음(void)]: 무조건 .accept() 함수 사용 !
 //Supplier		  [리턴값만 존재]: 리턴타입에 따라 함수 달라짐 .get(), .getAsBoolean(), .getAsInt(), ...
 //Function		  [매개변수, 리턴값 둘 다 존재]: .apply(), .applyAsDouble(int value); ==> int를 Double로 매핑 
+//Operator		  [매개변수, 리턴값 둘 다 존재]: 연산 수행 후 그 결과값을 리턴한다. 
+//Predicate		  [매개변수있음, 리턴값은 무조건 boolean]: .test() >>> 시그널 보내기에 활용 (속도 !)
 
 public class Example09 {
 	public static void main(String[] args) {

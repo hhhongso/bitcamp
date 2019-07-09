@@ -2,41 +2,43 @@ package Prac0621.haksa;
 
 import java.util.Scanner;
 
-// µî·Ï ÇÔ¼ö
+// ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 
 /*
- * 1. ÇÐ»ý/ ±³¼ö/ °ü¸®ÀÚ /ÀÌÀü¸Þ´º ¼±ÅÃ 
- * 2. ÇÐ»ý ¼±ÅÃ ½Ã 
- * 2-2. ±³¼ö 
- * 2-3. °ü¸®ÀÚ 
- * 2-4. ÀÌÀü¸Þ´º 
+ * 1. ï¿½Ð»ï¿½/ ï¿½ï¿½ï¿½ï¿½/ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ /ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+ * 2. ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
+ * 2-2. ï¿½ï¿½ï¿½ï¿½ 
+ * 2-3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+ * 2-4. ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ 
  */
 
 public class Register {
 	Scanner sc = new Scanner(System.in);
 	public Domain domain;
 	
+	int choice = sc.nextInt();
+	public void registerProcess() {
+		if(choice == 1) {
+		} else if (choice == 2) {
+			
+		} else if (choice == 3) {
+			
+		} else if (choice == 4) {
+		
+		}
+	}
 	public Register() {
 		domain = new Domain();
 		
-		System.out.println("=====¸Þ´º ¼±ÅÃ=====");
-		System.out.println("1. ÇÐ»ý");
-		System.out.println("2. ±³¼ö");
-		System.out.println("3. °ü¸®ÀÚ");
-		System.out.println("4. ÀÌÀü¸Þ´º");
-		System.out.println("¹øÈ£¸¦ ¼±ÅÃÇØ ÁÖ¼¼¿ä.. ");
-		int choice = sc.nextInt();
+		System.out.println("=====ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½=====");
+		System.out.println("1. ï¿½Ð»ï¿½");
+		System.out.println("2. ï¿½ï¿½ï¿½ï¿½");
+		System.out.println("3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		System.out.println("4. ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½");
+		System.out.println("ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½.. ");
 		
-		public void register(int choice) {
-			if(choice == 1) {
-			} else if (choice == 2) {
-				
-			} else if (choice == 3) {
-				
-			} else if (choice == 4) {
-			
-			}
-		}
+		
+		
 	
 //		for (int i = 0; i < domain.haksaList.size(); i++) {
 //			if() {

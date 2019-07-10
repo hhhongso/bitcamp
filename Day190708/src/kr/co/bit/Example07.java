@@ -5,8 +5,8 @@ public class Example07 { //클래스 안에
 		int field1; 
 		public InnerClass1() {} // 생성자 함수 선언 [가능]
 		void method1() {} // 일반 메소드 선언 [가능]
-		static int field2; // 인스턴스 클래스에서 스태틱 필드 선언 [불가]
-		static void method2() {} // 		스태틱 메소드 선언 [불가]
+//		static int field2; // 인스턴스 클래스에서 스태틱 필드 선언 [불가]
+//		static void method2() {} // 		스태틱 메소드 선언 [불가]
 	}
 	
 	static class InnerClass2 { // 스태틱 클래스 선언
@@ -24,11 +24,13 @@ public class Example07 { //클래스 안에
 			int field1; 
 			public InnerClass3() {} // 생성자 함수 선언 [가능]
 			void method1() {} // 일반 메소드 선언 [가능]
-			static int field2; // 로컬 클래스에서 스태틱 필드 선언 [불가]
-			static void method2() {} // 		스태틱 메소드 선언 [불가]
-		}
+//			static int field2; // 로컬 클래스에서 스태틱 필드 선언 [불가]
+//			static void method2() {} // 		스태틱 메소드 선언 [불가]
+//		}
 		InnerClass3 ic = new InnerClass3(); // [가능]
-	}	InnerClass3 ic = new InnerClass3(); // [불가] 로컬 영역을 벗어남
+	}
+}
+//	InnerClass3 ic = new InnerClass3(); // [불가] 로컬 영역을 벗어남
 	
 	
 	public static void main(String[] args) {

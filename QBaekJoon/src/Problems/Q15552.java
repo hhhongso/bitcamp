@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Q15552_humm {
+public class Q15552 {
 
 	public static void main(String[] args) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,5 +26,5 @@ public class Q15552_humm {
 					e.printStackTrace();
 				}
 	}
-
+ 
 }

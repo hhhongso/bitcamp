@@ -10,7 +10,7 @@ public class Example01_MaxOrMin {
 	
 	public static int maxOrMin(IntBinaryOperator operator) {
 		int result = scores[0];
-		for (int i : scores) {					//score[i]가 아니라 그냥 i야? 
+		for (int i : scores) {	
 			result = operator.applyAsInt(result, i);
 		}
 		return result;

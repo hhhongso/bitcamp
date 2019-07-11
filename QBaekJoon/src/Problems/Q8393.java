@@ -12,6 +12,7 @@ public class Q8393 {
 			sum =+ sum+i;
 		}
 		System.out.print(sum);
+		
 	}
 
 }

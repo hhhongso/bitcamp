@@ -8,14 +8,14 @@ import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
 
-public class AwtTest extends Frame{
+public class Calculator extends Frame{
 	private Button[] numAop;
 	private String[] num; 
 	private Button ce, back;
 	private Panel p0;
 	private Panel p1, p2;
 	
-	public AwtTest() {	
+	public Calculator() {	
 	  this.setResizable(false);
 		setBounds(700, 100, 300, 400);
 		setTitle("미니 계산기");
@@ -76,7 +76,7 @@ public class AwtTest extends Frame{
 	}
 	
 	public static void main(String[] args) {
-		new AwtTest();
+		new Calculator();
 		
 /*		String $name = "홍";
 		int #age = 22;

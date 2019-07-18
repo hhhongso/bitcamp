@@ -20,10 +20,13 @@ public class AwtTest2 extends Frame{
 		setVisible(true);
 		setBackground(Color.RED);
 		
+		
+	
+	}	
 	
 	
 	public static void main(String[] args) {
-		new AwtTest();
+		new AwtTest2();
 
 	
 	}

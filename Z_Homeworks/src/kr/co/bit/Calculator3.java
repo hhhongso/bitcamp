@@ -1,42 +1,28 @@
 package kr.co.bit;
 
-/*
-p0 = 전체 => grid 7,1
-p1 = lb1 
-p2 = lb2
-p3 = back, ce
-p4 = 789/
-p5 = 456*
-p6 = 123-
-p7 = .0=+
-*/			
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
-public class Calculator2 extends Frame implements ActionListener {
+public class Calculator3 extends Frame implements ActionListener{
 	private Button[] btn;
 	private Panel[] p;
 	private int[] num;
 	private Label lb1, lb2;
-	private String lb1Result, lb2Result;
+	private StringBuffer lb1Result, lb2Result;
 	private String[] op = {"+", "-", "*", "/", ".", "=", "CE", "BACK"};
 						//	10	11	 12	  13	14	15	  16	17
 
 	
-	public Calculator2() {		
-		lb1Result = lb2Result = "";
-		
+	public Calculator3() {		
+		lb1Result = lb2Result = new StringBuffer();
 		this.setResizable(false);
 		setBounds(700, 100, 300, 400);
 		setTitle("미니 계산기");
@@ -131,58 +117,42 @@ public class Calculator2 extends Frame implements ActionListener {
 public void actionPerformed(ActionEvent e) {
 	for (int i = 0; i < btn.length; i++) {
 		if(i < 10) {
-			if(e.getSource() == btn[i]) lb2Result += i;
+			if(e.getSource() == btn[i]) lb2Result.append(i);
 		} 
 		else if(i >= 10 && i < 15) {
 			String d = op[i-10];
 			if(e.getSource() == btn[i]) {
-				lb2Result += d;		
-				System.out.println(lb2Result.length());
-				System.out.println(lb2Result.charAt(lb2Result.length()));
-		/*			if(lb2Result.charAt(lb2Result.length()) == '+' ||	lb2Result.charAt(lb2Result.length()) == '-' ||
-						lb2Result.charAt(lb2Result.length()) == '*' ||	lb2Result.charAt(lb2Result.length()) == '/' ||
-						lb2Result.charAt(lb2Result.length()) == '.') break;
-					else */ 						
+				lb2Result.append(d);		
+				
+						
 			}	
 		}
 		else if (i == 15) { // =
-			if(e.getSource() == btn[15]) {
-				//+ Integer.parseInt() 에 사용될 String을 int형으로 형변환 가능한 값으로 초기화 해준다. 
-				//각 연산자에게 번호값을 주어야 하는데 
-					
-		//		String x = lb2Result.substring(0, Integer.parseInt());
-		//		String y = lb2Result.substring(Integer.parseInt("+")+1);
+			if(e.getSource() == btn[15]) {		
+				lb1Result.append(lb2Result);
 				
-		//		int plusResult = Integer.parseInt(x) + Integer.parseInt(y);
-				
-				
-				//-
-					
-				//*
-				
-				// /
-
-				lb1Result += lb2Result;
-				lb2Result = "";
+//				lb2Result = "";
 			}
 		} 
 		else if (i == 16) { //CE
-			if(e.getSource() == btn[16]) lb1Result =lb2Result = "";
+//			if(e.getSource() == btn[16]) lb1Result =lb2Result = "";
 		}
 		else if (i == 17) { //Backspace
-			if(e.getSource() == btn[17]) lb2Result = lb2Result.substring(0, lb2Result.length()-1);			
+//			if(e.getSource() == btn[17]) lb2Result = lb2Result.delete(start, end);		
 		}
 	
 	}
+	System.out.println(lb1Result);
+	//System.out.println(lb2Result);
 	
-	lb1.setText(lb1Result);
-	lb2.setText(lb2Result);		
+//	lb1.setText(lb1Result);
+//	lb2.setText(lb2Result);		
 }	
 
 
 // main ======================================================================================================
 	public static void main(String[] args) {
-		new Calculator2();
+		new Calculator3();
 	}
 
 
@@ -190,4 +160,3 @@ public void actionPerformed(ActionEvent e) {
 	
 }
 	
-

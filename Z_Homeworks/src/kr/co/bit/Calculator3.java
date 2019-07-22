@@ -115,33 +115,50 @@ public class Calculator3 extends Frame implements ActionListener{
 //버튼 이벤트 오버라이드==================================================================================================	
 @Override
 public void actionPerformed(ActionEvent e) {
-	for (int i = 0; i < btn.length; i++) {
+	for (int i = 0; i < 10; i++) {
 		if(i < 10) {
 			if(e.getSource() == btn[i]) lb2Result.append(i);
 		} 
-		else if(i >= 10 && i < 15) {
-			String d = op[i-10];
-			if(e.getSource() == btn[i]) {
-				lb2Result.append(d);		
-				
-						
-			}	
+	}
+//	"+", "-", "*", "/",
+//	10	11	 12	  13	
+	
+	if(e.getSource() == btn[10]) {
+		lb2Result.append("+");
+		lb1Result.append(lb2Result);
+		lb2Result.setLength(0);
+	} else if(e.getSource() == btn[11]){
+		lb2Result.append("-");
+		lb1Result.append(lb2Result);
+		lb2Result.setLength(0);
+	} else if(e.getSource() == btn[12]){
+		lb2Result.append("*");
+		lb1Result.append(lb2Result);
+		lb2Result.setLength(0);
+	} else if(e.getSource() == btn[13]){
+		lb2Result.append("/");
+		lb1Result.append(lb2Result);
+		lb2Result.setLength(0);
+	} else if(e.getSource() == btn[14]){
+		lb2Result.append(".");
+		if(lb2Result.charAt(lb2Result.length()) == '.') { 
+			System.out.println("소수점은 연속으로 올 수 없습니다. ");
 		}
-		else if (i == 15) { // =
-			if(e.getSource() == btn[15]) {		
+	} 
+	else if(e.getSource() == btn[15]) {		
 				lb1Result.append(lb2Result);
 				
 //				lb2Result = "";
 			}
-		} 
-		else if (i == 16) { //CE
-//			if(e.getSource() == btn[16]) lb1Result =lb2Result = "";
+ 
+	else if (e.getSource() == btn[16]) { //CE
+//			lb1Result =lb2Result = "";
 		}
-		else if (i == 17) { //Backspace
-//			if(e.getSource() == btn[17]) lb2Result = lb2Result.delete(start, end);		
-		}
-	
+	else if (e.getSource() == btn[17]) { //Backspace
+//		 lb2Result = lb2Result.delete(start, end);		
 	}
+	
+
 	System.out.println(lb1Result);
 	//System.out.println(lb2Result);
 	

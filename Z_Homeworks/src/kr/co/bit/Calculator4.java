@@ -11,276 +11,208 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
+
 
 public class Calculator4 extends Frame implements ActionListener {
-	private Button[] btn;
-	private Panel[] p;
-	private int[] num;
-	private Label lb1, lb2;
-	private StringBuffer lb1Result, lb2Result;
-	private String[] op = {"+", "-", "*", "/", ".", "=", "CE", "BACK"};
-						//	10	11	 12	  13	14	15	  16	17
-	private double result; //DecimalFormat
-	private int calcOp = 0;
-
 	
-	public Calculator4() {		
-		lb1Result = new StringBuffer();
-		lb2Result = new StringBuffer("0");
-		this.setResizable(false);
+	private Panel[] p = new Panel[8];
+	private Button[] button = new Button[18];
+	private String[] str = {"0", "1","2", "3", "4", "5", "6", "7", "8", "9", 
+							"+", "-", "*", "/", ".", "=", "CE", "BACKSPACE"};
+	private Label lb1, lb2; 
+	private StringBuffer lb1sb, lb2sb;
+	private double result;
+	private int op; 
+	
+	private DecimalFormat df = new DecimalFormat("#,###.#####");
+	
+	public Calculator4() {
+		setTitle("계산기");
 		setBounds(700, 100, 300, 400);
-		setTitle("미니 계산기");
 		setVisible(true);
+		setResizable(false);
+		lb1 = new Label();
+		lb2 = new Label("0");
 		
-		p = new Panel[8];
-		btn = new Button[18];
-		num = new int[10];
+		lb1sb = new StringBuffer();
+		lb2sb = new StringBuffer();
+
 		
-		lb1 = new Label("UPlabel");
-		lb2 = new Label("0", Label.RIGHT); 
-
-		lb1.setFont(new Font("고딕체", Font.BOLD, 20));
-		lb2.setFont(new Font("고딕체", Font.BOLD, 20));
-
+		lb2.setFont(new Font("궁서", Font.BOLD, 15));
+		
 		lb1.setAlignment(Label.RIGHT);
-
-
-
-// 패널, 버튼, 라벨 배열 생성 =================================================================================================
-		for (int i = 0; i < p.length; i++) {
-			p[i] = new Panel(); 
-		} //패널 0~8 생성
+		lb2.setAlignment(Label.RIGHT);
 		
-		for (int i = 0; i < btn.length; i++) {
-			if(i < 9) {
-				num[i] = i;
-				String a = Integer.toString(num[i]);
-				btn[i] = new Button(Integer.toString(num[i]));				
-			} //버튼1~10까지 숫자 버튼 배열 생성
-			else if (i >= 10) {
-				String b = op[i-10];
-				btn[i] = new Button(b);		
-			} //버튼10~18까지 연산자, CE, Back버튼 배열 생성
-		}
-		btn[9] = new Button("9");
+		for (int i = 0; i < p.length; i++) { p[i] = new Panel(); }
+		for (int j = 0 ; j < button.length; j++) { button[j] = new Button(str[j]); }
 		
-// 버튼, 라벨 배열을 패널에 넣기 ==========================================================================================	
-		p[0].setBackground(Color.DARK_GRAY);
 		p[0].setLayout(new GridLayout(7, 1, 5, 5));
-		this.add(p[0]);
+		p[1].setBackground(new Color(255, 200, 150));
+		p[2].setBackground(new Color(255, 200, 150));
 		
-		p[1].setBackground(new Color(252, 239, 237));
-		p[1].setLayout(new GridLayout(1, 1, 5, 5));	
 		p[1].add(lb1);
-		
-		p[2].setBackground(new Color(252, 239, 237));
+		p[1].setLayout(new GridLayout(1, 1, 5, 5));
+		p[2].add(lb2);
 		p[2].setLayout(new GridLayout(1, 1, 5, 5));
-		p[2].add(lb2);		
+	
+		for (int i = 3; i < 8; i++) {
+			p[i].setLayout(new GridLayout(1, 4, 5, 5));
+		}
 		
-		p[3].setLayout(new GridLayout(1, 2, 5, 5));
-		p[3].add(btn[16]);
-		p[3].add(btn[17]);
-		btn[16].setBackground(new Color(255, 245, 173));
-		btn[17].setBackground(new Color(173, 255, 247));		
-		
-		p[4].setLayout(new GridLayout(1, 4, 5, 5));
-		p[4].add(btn[7]);
-		p[4].add(btn[8]);
-		p[4].add(btn[9]);
-		p[4].add(btn[13]);
-		
-		p[5].setLayout(new GridLayout(1, 4, 5, 5));
-		p[5].add(btn[4]);
-		p[5].add(btn[5]);
-		p[5].add(btn[6]);
-		p[5].add(btn[12]);
-		
-		p[6].setLayout(new GridLayout(1, 4, 5, 5));
-		p[6].add(btn[1]);
-		p[6].add(btn[2]);
-		p[6].add(btn[3]);
-		p[6].add(btn[11]);
-		
-		p[7].setLayout(new GridLayout(1, 4, 5, 5));
-		p[7].add(btn[14]);
-		p[7].add(btn[0]);
-		p[7].add(btn[15]);
-		p[7].add(btn[10]);		
-		
+	/*	int num = 0; int count = 3; 
+		if(num < 18) {
+			for (int j = num; j < num+4; j++) {
+				p[count].add(button[j]);
+			}
+			count++;
+			num+=4;
+		}
+		*/
+
+		for (int j = 0; j < 4; j++) {
+			p[3].add(button[j]);	
+		}
+		for (int j = 4; j < 8; j++) {	
+			p[4].add(button[j]);					
+		}
+		for (int j = 8; j < 12; j++) {	
+			p[5].add(button[j]);					
+		}
+		for (int j = 12; j < 16; j++) {
+			p[6].add(button[j]);					
+		}
+		for (int j = 16; j < 18; j++) {	
+			p[7].add(button[j]);					
+		}
 		for (int i = 1; i < p.length; i++) {
 			p[0].add(p[i]);
-		} //1~7 패널을 배경 패널 p0에 넣어주기
-//윈도우 창닫기 이벤트 처리		
-		this.addWindowListener(new WindowAdapter() {
-			@Override
+		}
+		
+		this.add("Center", p[0]);		
+		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-
-//버튼 이벤트 처리		
-		for (int i = 0; i < btn.length; i++) {
-			btn[i].addActionListener(this);		
+				System.exit(0);				
+			}			
+		});		
+		for (int j = 0; j < button.length; j++) {
+			button[j].addActionListener(this);			
 		}
-	} //생성자
-
-//버튼 이벤트 오버라이드==================================================================================================	
-@Override
-public void actionPerformed(ActionEvent e) {
-	if(e.getSource() == btn[1] ||
-		e.getActionCommand().equals("2") ||
-		e.getActionCommand().equals("3") ||
-		e.getActionCommand().equals("4") ||
-		e.getActionCommand().equals("5") ||
-		e.getActionCommand().equals("6") ||
-		e.getActionCommand().equals("7") ||
-		e.getActionCommand().equals("8") ||
-		e.getActionCommand().equals("9") ||
-		e.getActionCommand().equals("0")) {
-
-		if((lb2Result+"").equals("0")) {
-			lb2Result.delete(0, lb2Result.length());
-		}
-
-		lb2Result.append(e.getActionCommand());
-		lb2.setText(lb2Result+"");
-
-	}
-/*	for (int i = 0; i < 10; i++) {
-		if(i < 10) {
-			if(e.getSource() == btn[i]) lb2Result.append(i);
-		} 
-	} */
-//	"+", "-", "*", "/",
-//	10	11	 12	  13	
-	
-	else if(e.getActionCommand() == "+") {
-		lb1Result.append(lb2Result+"+");
-		calcOp = '+'; //43
-		calc();
-
-		lb2Result.delete(0, lb2Result.length());
-		lb2Result.append("0");
-		lb1.setText(result+"");	
-
-	} else if(e.getActionCommand() == "-"){
-		lb1Result.append(lb2Result+"-");
-		calcOp = '-';
-		calc();
-	
-		lb2Result.delete(0, lb2Result.length());
-		lb2Result.append("0");
-		lb1.setText(lb1Result+"");
-
-	} else if(e.getActionCommand() == "*"){
-		lb1Result.append(lb2Result+"*");
-		calcOp = '*';
-		calc();
-
-		lb2Result.delete(0, lb2Result.length());
-		lb2Result.append("0");
-		lb1.setText(lb1Result+"");
-
-	} else if(e.getActionCommand() == "/"){
-		lb1Result.append(lb2Result+"/");
-		calcOp = '/';
-		calc();
-
-		lb2Result.delete(0, lb2Result.length());
-		lb2Result.append("0");
-		lb1.setText(lb1Result+"");
-
-	} else if(e.getSource() == btn[14]){
-		if(lb2Result.indexOf(".") == -1){	//-1: 값이 없음 
-			lb2Result.append(".");
-			lb2.setText(lb2Result+"");
-		}
-	}
-	else if(e.getSource() == btn[15]) {		
-//				lb1Result.append(lb2Result);
-				
-//				lb2Result = "";
-	}
- 
-	else if (e.getSource() == btn[16]) { //CE
-		lb1Result.delete(0, lb1Result.length());
-		lb2Result.delete(0, lb2Result.length());
-		lb1Result.append("0");
-		lb2Result.append("0");
-
-		lb1.setText("");
-		lb2.setText("0");
-
-			
-		}
-	else if (e.getSource() == btn[17]) { //Backspace
-		if(lb2Result.length() == 1) {
-			lb2Result.delete(0, 1);
-			lb2Result.append("0");
-			
-		} else {
-			lb2Result.delete(lb2Result.length()-1, lb2Result.length());
-
-		}
-		lb2.setText(lb2Result+"");
-	}
-
-}
-
-	public void calc(){
-	// calcop를 비교, 어떤 연산자인지 확인. 
-	// (op=0일떄)입력된 값을 result에 넣는다. / calcOp에 따라 계산 
-	// 연산자를 calcOP에 넣는다.
-	
-		if(calcOp == 0){
-			System.out.println("111");
-			result = Integer.parseInt(lb1Result.toString()); 
-		} 
-		else if(calcOp == '+') { // +
-			String[] calcPlus = lb1Result.toString().split("+");
-			for (int j = 0; j < calcPlus.length; j++) {
-				int calcPlus1 = Integer.parseInt(calcPlus[j]);
-				result += calcPlus1;
-				
-				System.out.println(calcPlus1);
-				System.out.println(result);
-			}
-	/*		int calcOp= lb1Result.indexOf("+");
-			System.out.println(calcOp);
 		
-			String x = lb1Result.substring(0, calcOp);
-			String y = lb1Result.substring(calcOp+1);
-			System.out.println(x);
-			System.out.println(y);
-			
-			result = (double)Integer.parseInt(x); */
-			
-			System.out.println(result);
-		
-
-		} else if(calcOp == '-'){ // -
-			int calcOp= lb1Result.indexOf("-");
-			String x = lb1Result.substring(0, calcOp);
-			result = (double)(Integer.parseInt(x));
-			
-		} else if(calcOp == '*'){ // *
-			int calcOp= lb1Result.indexOf("*");
-			String x = lb1Result.substring(0, calcOp);
-			result = (double)(Integer.parseInt(x));
-			
-		} else if(calcOp == '/'){ // /
-			int calcOp= lb1Result.indexOf("/");
-			String x = lb1Result.substring(0, calcOp);
-			result = (double)(Integer.parseInt(x));
-		}
-
-	}
-
+	}//constructor
+	
 // main ======================================================================================================
 	public static void main(String[] args) {
 		new Calculator4();
+	
 	}
 
+@Override
+public void actionPerformed(ActionEvent e) {
+	
+	if(e.getActionCommand() == "1" || e.getActionCommand() == "2" ||
+		e.getActionCommand() == "3" || e.getActionCommand() == "4" ||
+		e.getActionCommand() == "5" || e.getActionCommand() == "6" ||
+		e.getActionCommand() == "7" || e.getActionCommand() == "8" ||
+		e.getActionCommand() == "9" || e.getActionCommand() == "0") {
+		
+		if((lb2sb.toString()).equals("0")) lb2sb.delete(0, 1);		
+		lb2sb.append(e.getActionCommand());
+		lb2.setText(lb2sb+"");
+	}
+	
+	if(e.getActionCommand() == "+")	{
+		calc();
+		lb1sb.append(lb2sb+"+");
+		lb2sb.delete(0, lb2sb.length());
+		lb2sb.append("0");
+		
+		op = '+';
+		lb1.setText(lb1sb+"");
+		lb2.setText(df.format(result));
+	//	lb2.setText(lb2sb+"");
+	} else if(e.getActionCommand() == "-") {
+		calc();
+		lb1sb.append(lb2sb+"-");
+		lb2sb.delete(0, lb2sb.length());
+		lb2sb.append("0");
+		
+		op = '-';
+		lb1.setText(lb1sb+"");
+		lb2.setText(df.format(result));
+		
+	} else if(e.getActionCommand() == "*") {
+		calc();
+		lb1sb.append(lb2sb+"*");
+		lb2sb.delete(0, lb2sb.length());
+		lb2sb.append("0");
+		
+		op = '*';
+		lb1.setText(lb1sb+"");
+		lb2.setText(df.format(result));
+		
+	} else if(e.getActionCommand() == "/") {
+		calc();
+		lb1sb.append(lb2sb+"/");
+		lb2sb.delete(0, lb2sb.length());
+		lb2sb.append("0");
+		
+		op = '/';
+		lb1.setText(lb1sb+"");
+		lb2.setText(df.format(result));
+		
+	} else if(e.getActionCommand() == "=") {
+		calc();
+		lb1sb.delete(0, lb1sb.length());
+		op = '=';
+		lb1.setText(lb1sb+"");
+		lb2.setText(df.format(result));
+		
+	} else if(e.getActionCommand() == ".") {
+		if(lb2sb.indexOf(".") == -1) lb2sb.append(".");
+		else if(lb2sb.indexOf(".") == -1 && (lb2sb+"").equals("0")) lb2sb.append("0.");
+		lb2.setText(lb2sb+"");
+		
+/*		if(lb2sb.indexOf(".") == -1) {
+			lb2sb.append(".");
+			lb2.setText(lb2sb+"");
+		} */
+		
+	} else if(e.getActionCommand() == "CE") {
+		lb1sb.delete(0, lb1sb.length());
+		lb2sb.delete(0, lb2sb.length());
+		
+		lb2sb.append("0");
+		
+		lb1.setText("");
+		lb2.setText(lb2sb+"");
+		
+	} else if(e.getActionCommand() == "BACKSPACE") {
+		if(lb2sb.length() >= 1) {
+			lb2sb.delete(lb2sb.length()-1, lb2sb.length());
+			lb2.setText(lb2sb+"");			
+		} else if(lb2sb.length() == 0) {
+			lb2sb.delete(0, 1);
+			lb2sb.append("0");
+			lb2.setText(lb2sb+"");	
+		}
+	}
+	
+} // actionPerformed
+
+	public void calc() {
+		if(op == 0) {
+			result = Double.parseDouble(lb2sb.toString());
+		}else if(op == '+') result = result + Double.parseDouble(lb2sb.toString());
+		else if(op == '-') result = result - Double.parseDouble(lb2sb.toString());
+		else if(op == '*') result = result * Double.parseDouble(lb2sb.toString());
+		else if(op == '/') result = result / Double.parseDouble(lb2sb.toString());
+		else if(op == '=') result += result;
+			
+		
+	
+	}
+	
 
 
 	

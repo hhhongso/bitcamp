@@ -118,7 +118,7 @@ class SungJukAction {
 			if(sdto.getName().equals(delName)) {
 				it.remove();  // remove(): next()로 호출한 데이터를 삭제한다. 
 				exist = true;
-				sw = 1;				
+				sw++;				
 			//iterator가 가리키는 곳의 값을 지우고 다음 단계로 넘어감(.next()) 
 			}
 		} 

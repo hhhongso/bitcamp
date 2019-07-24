@@ -29,7 +29,7 @@ class Racer extends Canvas implements Runnable {
 
 	public void run(){
 		for(int i = 0; i < this.getSize().width; i+=(int)(Math.random()*10)+10) {
-			synchronized(Racer.class) {
+		//	synchronized(Racer.class) {
 				x = i;				
 				//runtime[i] = t[i].getThreadCpuTime(Thread.currentThread());			
 				repaint();
@@ -39,11 +39,10 @@ class Racer extends Canvas implements Runnable {
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				}
-			}
+		//	}
 			
-		}
-	rank++;
-	System.out.println(rank + "등은?: " + Thread.currentThread().getName() + "입니다!!!");
+		}								//Thread.currentThread.getName()
+	System.out.println(++rank + "등은?: " + argName + "입니다!!!");
 
 
 	}

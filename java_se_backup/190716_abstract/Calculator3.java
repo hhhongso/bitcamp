@@ -41,12 +41,13 @@ class Calculator3 extends Frame implements ActionListener {
 		num = new int[10];
 		
 		lb1 = new Label("UPlabel");
-		lb2 = new Label("0", Label.RIGHT); 
+		lb2 = new Label("0", Label.RIGHT);
 
 		lb1.setFont(new Font("∞ÌµÒ√º", Font.BOLD, 12));
 		lb2.setFont(new Font("∞ÌµÒ√º", Font.BOLD, 20));
 
 		lb1.setAlignment(Label.RIGHT);
+		lb2.setAlignment(Label.RIGHT);
 
 
 
@@ -210,8 +211,8 @@ public void actionPerformed(ActionEvent e) {
 		}
 	}
 	else if(e.getSource() == btn[15]) {		// = 
-		
 		calc();
+
 		lb1Result.delete(0, lb1Result.length());
 		lb2Result.delete(0, lb2Result.length());
 		lb2Result.append("0");

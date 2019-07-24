@@ -22,7 +22,6 @@ class Synchronized extends Thread {
 			for(int i = 1; i <= 5; i++){
 				count++;
 				System.out.println(Thread.currentThread().getName() + " : " + count);
-
 				try{
 					Thread.sleep(100);
 				} catch (InterruptedException e){

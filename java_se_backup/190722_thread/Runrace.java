@@ -56,7 +56,7 @@ class RunRace extends Frame implements ActionListener {
 	} // 생성자 
 
 	public void actionPerformed(ActionEvent e){
-	//	button.setEnabled(false); // 버튼은 한 번만 누르게 한다. [버튼 비활성화]
+		button.setEnabled(false); // 버튼은 한 번만 누르게 한다. [버튼 비활성화]
 		//스레드 생성, 출발 버튼 누르면 스레드 실행
 		Thread[] t = new Thread[count];
 		for(int i = 0 ; i < count ; i++){

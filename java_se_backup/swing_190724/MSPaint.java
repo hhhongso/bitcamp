@@ -13,10 +13,11 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import java.util.*;
+
 
 class MSPaint extends JFrame {
 	private JLabel x1L, x2L, y1L, y2L, z1L, z2L; 
@@ -26,6 +27,10 @@ class MSPaint extends JFrame {
 	private JComboBox<String> combo; 
 	private JButton drawB; 
 	private DrCanvas can;
+
+	private ArrayList<ShapeDTO> list1;
+	private ShapeDTO dto;
+
 
 	public JTextField getX1T(){
 		return x1T;
@@ -72,6 +77,10 @@ class MSPaint extends JFrame {
 
 	public JRadioButton getPen(){
 		return pen;
+	}
+
+	public ArrayList<ShapeDTO> getArrayList(){
+		return list1;
 	}
 
 /*	public String getX1T(){
@@ -153,34 +162,49 @@ class MSPaint extends JFrame {
 		combo.addItem("º¸¶ó");
 		combo.addItem("ÇÏ´Ã");  */
 		
-
+		list1 = new ArrayList<ShapeDTO>();
+		
 		setBounds(1000, 100, 700, 500);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		drawB.addActionListener(new ActionListener(){
+/*		drawB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {		
 				can.repaint();
 			}
 		});
-		
+*/		
 		can.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent e){
 				x1T.setText(e.getX()+"");
 				y1T.setText(e.getY()+"");
-			}		
+			}
+
+			public void mouseReleased(MouseEvent e){
+				int shape = 100; 
+				if(line.isSelected()){
+					shape = 0;
+				} else if(circle.isSelected()){
+					shape = 1;
+				} else if(rect.isSelected()){
+					shape = 2;
+				} else if(roundRect.isSelected()){
+					shape = 3;
+				} else if(pen.isSelected()){
+					shape = 4;
+				} 
+				list1.add(new ShapeDTO(Integer.parseInt(x1T.getText()), Integer.parseInt(y1T.getText()), Integer.parseInt(x2T.getText()), Integer.parseInt(y2T.getText()), 
+				Integer.parseInt(z1T.getText()), Integer.parseInt(z2T.getText()), fill.isSelected(), shape, combo.getSelectedIndex()));
+			}
 		});
 
 		can.addMouseMotionListener(new MouseAdapter(){
 			public void mouseDragged(MouseEvent e){
-					x2T.setText(e.getX()+"");
-					y2T.setText(e.getY()+"");
-					can.repaint();
+				x2T.setText(e.getX()+"");
+				y2T.setText(e.getY()+"");
+				can.repaint();
 			}
-		});
-
-		
-		
+		});		
 		
 	} // constructor
 

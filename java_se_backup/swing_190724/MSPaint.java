@@ -183,15 +183,15 @@ class MSPaint extends JFrame {
 			public void mouseReleased(MouseEvent e){
 				int shape = 100; 
 				if(line.isSelected()){
-					shape = 0;
+					shape = ShapeDTO.LINE;
 				} else if(circle.isSelected()){
-					shape = 1;
+					shape = ShapeDTO.CIRCLE;
 				} else if(rect.isSelected()){
-					shape = 2;
+					shape = ShapeDTO.RECT;
 				} else if(roundRect.isSelected()){
-					shape = 3;
+					shape = ShapeDTO.ROUNDRECT;
 				} else if(pen.isSelected()){
-					shape = 4;
+					shape = ShapeDTO.PEN;
 				} 
 				list1.add(new ShapeDTO(Integer.parseInt(x1T.getText()), Integer.parseInt(y1T.getText()), Integer.parseInt(x2T.getText()), Integer.parseInt(y2T.getText()), 
 				Integer.parseInt(z1T.getText()), Integer.parseInt(z2T.getText()), fill.isSelected(), shape, combo.getSelectedIndex()));

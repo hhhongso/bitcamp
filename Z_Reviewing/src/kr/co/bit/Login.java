@@ -22,7 +22,7 @@ public class Login extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		login.
+	
 	}
 	
 	class MyPanel extends JPanel{

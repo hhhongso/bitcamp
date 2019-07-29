@@ -3,8 +3,11 @@ package kr.co.bit;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -52,10 +55,10 @@ public class TryNotepad extends JFrame implements ActionListener{
 			area.setText("");	
 		}
 		else if(e.getSource() == mp.getOpenM()) {
-			openDialog();			fileWrite();
+			openDialog();			fileRead();	
 		}
 		else if(e.getSource() == mp.getSaveM()) {
-			saveDialog();
+			saveDialog();			fileWrite();
 		}
 		else if(e.getSource() == mp.getExitM()) {
 			exitDialog();
@@ -64,24 +67,41 @@ public class TryNotepad extends JFrame implements ActionListener{
 		else if(e.getSource() == mp.getCopyM()) { area.copy();}
 		else if(e.getSource() == mp.getPasteM()) { area.paste();}		
 	}
-	
+
+
 //==========================================================================================================================	
-	private void exitDialog() {
-		JOptionPane.showConfirmDialog(this, "나가기 전에 저장하기? ", "종료", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
-		int result = 0; 
-		if(result == JOptionPane.YES_NO_OPTION) { saveDialog();}
-		else if(result == JOptionPane.NO_OPTION) { System.exit(0);}
-		else if(result == JOptionPane.CANCEL_OPTION) {setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);}	
-	}
-
-	private void saveDialog() {		
-	}
-
 	public void openDialog() {
 		chooser = new JFileChooser();	
 		int result = chooser.showOpenDialog(this);		
 		if(result == JFileChooser.APPROVE_OPTION) { 	JOptionPane.showMessageDialog(this, file);}
 	
+	}
+	
+	private void fileRead() {
+		if(file == null) return;
+		
+		String data = null; 
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));	
+			while((data = br.readLine()) != null) {
+				area.append(data);
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void saveDialog() {	
+		chooser = new JFileChooser();	
+		int result = chooser.showSaveDialog(this);
+		if(result == JFileChooser.APPROVE_OPTION) {
+			file = chooser.getSelectedFile();
+		}
+		JOptionPane.showMessageDialog(this, "저장하였습니다. ");
 	}
 	
 	public void fileWrite() {
@@ -95,6 +115,16 @@ public class TryNotepad extends JFrame implements ActionListener{
 			e1.printStackTrace();
 		}		
 	}
+	
+	private void exitDialog() {
+		JOptionPane.showConfirmDialog(this, "나가기 전에 저장하기? ", "종료", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+		int result = 0; 
+		if(result == JOptionPane.YES_NO_OPTION) { saveDialog();}
+		else if(result == JOptionPane.NO_OPTION) { System.exit(0);}
+		else if(result == JOptionPane.CANCEL_OPTION) {setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);}	
+	}
+
+	
 
 //================================================================================================================
 	public static void main(String[] args) {

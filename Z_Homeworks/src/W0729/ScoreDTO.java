@@ -1,8 +1,9 @@
 package W0729;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public class ScoreDTO {
+public class ScoreDTO implements Serializable, Comparable<ScoreDTO> {
 	private String idNum; 
 	private String name;
 	private int kor;
@@ -51,7 +52,14 @@ public class ScoreDTO {
 	public String toString() {
 	//	return "[학번=" + idNum + ", 이름=" + name + ", 국어=" + kor + ", 영어=" + eng + ", 수학=" + math
 	//			+ ", 총점=" + total + ", 평균=" + df.format(avg) + "]";	
-		return String.format("%4s %4s %4d %4d %4d %4d %5.4f", idNum, name, kor, eng, math, total, avg);
+		return String.format("%6s %6s %6d %6d %6d %6d %9.2f", idNum, name, kor, eng, math, total, avg);
+	}
+
+	@Override
+	public int compareTo(ScoreDTO dto) {
+		if (this.total < dto.total) return -1; 
+		else if (this.total > dto.total) return 1;
+		else return 0;
 	}
 	
 	

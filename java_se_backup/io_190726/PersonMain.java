@@ -16,10 +16,11 @@ class PersonMain {
 		
 		//꺼내오기
 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("result2.txt"));
+		
 		PersonDTO dto2 = (PersonDTO)ois.readObject();
 							//return type은 Object. ==> 가져오고자 하는 클래스 타입으로 캐스팅해야함 
-		ois.close();
-		System.out.println("이름:" + dto2.getName() + "	나이:" + dto2.getAge() + "	키:" + dto2.getHeight());
 		
+		System.out.println("이름:" + dto2.getName() + "	나이:" + dto2.getAge() + "	키:" + dto2.getHeight());
+		ois.close();
 	}
 }

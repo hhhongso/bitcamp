@@ -80,7 +80,7 @@ public class TryNotepad extends JFrame implements ActionListener{
 	private void fileRead() {
 		if(file == null) return;
 		
-		String data = null; 
+		String data; 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));	
 			while((data = br.readLine()) != null) {

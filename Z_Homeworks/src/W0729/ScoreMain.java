@@ -75,9 +75,6 @@ public class ScoreMain extends JFrame implements ActionListener {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	} //constructor
-
-	
-	
 	
 	public JTextField getIdNumT() {
 		return idNumT;
@@ -131,10 +128,11 @@ public class ScoreMain extends JFrame implements ActionListener {
 			imp.disp(output);
 			
 		} else if(e.getActionCommand() == "학번 검색") {
-			imp.search();
+			imp.search(output);
 			
 		} else if(e.getActionCommand() == "총점 정렬") {
 			imp.sort();
+			imp.disp(output);
 			
 		} else if(e.getActionCommand() == "파일 저장") {
 			imp.save();

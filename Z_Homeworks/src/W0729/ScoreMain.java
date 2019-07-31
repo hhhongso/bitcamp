@@ -140,8 +140,6 @@ public class ScoreMain extends JFrame implements ActionListener {
 		} else if(e.getActionCommand() == "파일 열기") {
 			imp.load();
 			imp.disp(output);
-			
-			
 		}	
 	}
 //=========================================================================================================================================	

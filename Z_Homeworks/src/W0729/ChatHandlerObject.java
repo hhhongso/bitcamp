@@ -31,17 +31,18 @@ class ChatHandlerObject extends Thread implements java.io.Serializable {
 	@Override
 	public void run(){
 		try{
+			while(true){	
 			String nickName = ois.readUTF();
 			oos.writeUTF(nickName + "님이 입장하였습니다. ");
 			oos.flush();
 
-			while(true){	
 				System.out.println("handler while후");
 				
-				int count = ois.readInt();
-				System.out.println("handler while후" + count);
+				//int count = ois.readInt();
 				
-				for(int i = 0; i < count; i++){
+				while((dto = (InfoDTO)ois.readObject()) != null){
+					System.out.println("handler while후~");
+		//		for(int i = 0; i < count; i++){
 					dto = (InfoDTO)ois.readObject();	
 					broadcast(dto.toString());
 				}
@@ -75,7 +76,7 @@ class ChatHandlerObject extends Thread implements java.io.Serializable {
 	public void broadcast(String msg){ 
 		try{
 			for(ChatHandlerObject handler : list){
-				handler.oos.writeObject(dto);
+				handler.oos.writeObject(dto.toString());
 				handler.oos.flush();
 			}
 		}catch(IOException ioe){ 

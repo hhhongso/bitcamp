@@ -140,25 +140,26 @@ class ChatClientObject extends JFrame implements ActionListener, Runnable {
 				System.out.println("client while후");
 				
 					//채팅내용 읽어오ㄴ기 
-					int count = ois.readInt();
-					System.out.println("client while후" + count);
+		//			int count = ois.readInt();
 					
-					for(int i = 0; i < count; i++){
+					while((dto = (InfoDTO)ois.readObject()) != null){
+				//	for(int i = 0; i < count; i++){
+						System.out.println("client while후~");
 						dto = (InfoDTO) ois.readObject();
 						output.append(dto.toString());
 					}
 
-				if(dto == null || dto.getCommand().equals(Info.EXIT)){
-					oos.close();
-					ois.close();
-					socket.close();
-					System.exit(0);
+				if(dto == null || dto.getCommand().equals(Info.EXIT)){ break;
 				}
 			//스크롤바 자동 따라가기
 				int pos = output.getText().length();
 				output.setCaretPosition(pos);
 			}// while
 
+			oos.close();
+			ois.close();
+			socket.close();
+			System.exit(0);
 			
 
 			}catch(IOException ioe){

@@ -1,0 +1,37 @@
+package dbTest.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class UpdateTest {
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
+	private String user = "java"; 
+	private String pw = "dkdlxl"; 
+	
+	public UpdateTest() {
+		try {
+			Class.forName(driver);
+			System.out.println("driver loading!");	
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	public void getConnection() {
+		try {
+			Connection conn = DriverManager.getConnection(url, user, pw);
+			System.out.println("connected!");	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		UpdateTest ut = new UpdateTest();
+
+	}
+
+}

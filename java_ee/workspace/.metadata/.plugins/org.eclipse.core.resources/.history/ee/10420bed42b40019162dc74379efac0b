@@ -1,0 +1,170 @@
+//db연결 시, 변수명과 컬럼명을 동일하게 한다.
+
+
+package friend.action;
+
+import java.awt.BorderLayout;
+import java.awt.CheckboxGroup;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class FriendManager extends JFrame {
+	private JLabel nameL, telL, telhyphenL, telhyphenL2, sexL, hobbyL, inputL, dispL, infoL;
+	private JTextField nameT, tel2T, tel3T; 
+	private JComboBox<String> tel1C;
+	private JRadioButton manR, womanR; 
+	private JCheckBox readCB, movieCB, musicCB, gameCB, shoppingCB; 
+	private JList<FriendDTO> jlist; //Jlist: model 들어감요 , scroll도 있어야 
+	private JTextArea area;
+	private JButton regitB, editB, delB, clearB;
+	private JPanel southP, northP, eastP, westP; 
+	private JPanel[] westAr;
+	
+	public FriendManager() {		
+		nameL = new JLabel("이   름:");
+		telL = new JLabel("전화번호:");
+		telhyphenL = new JLabel(" - ");
+		telhyphenL2 = new JLabel(" - ");
+		sexL = new JLabel("성   별:");
+		hobbyL = new JLabel("취   미:");
+		inputL = new JLabel("개인정보입력");
+		dispL = new JLabel("전체목록");
+		infoL = new JLabel("개인정보분석");
+		
+		nameT = new JTextField(10);
+		tel2T = new JTextField(5);
+		tel3T = new JTextField(5);
+		
+		String[] telAr = new String[] {"010", "011", "019"};
+		tel1C = new JComboBox<String>(telAr);
+		
+		womanR = new JRadioButton("여성", true);
+		manR = new JRadioButton("남성");
+		
+		ButtonGroup bgroup = new ButtonGroup();
+		bgroup.add(womanR);
+		bgroup.add(manR);
+		
+		readCB = new JCheckBox("독서");
+		movieCB = new JCheckBox("영화");
+		musicCB = new JCheckBox("음악");
+		gameCB = new JCheckBox("게임");
+		shoppingCB = new JCheckBox("쇼핑");		
+		readCB.setSelected(true);		
+		
+
+		DefaultListModel<FriendDTO> model = new DefaultListModel<FriendDTO>(); 
+		jlist = new JList<FriendDTO>(model);
+		JScrollPane scroll = new JScrollPane(jlist);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		area = new JTextArea();
+
+		regitB = new JButton("등록");
+		editB = new JButton("수정");
+		delB = new JButton("삭제");
+		clearB = new JButton("지우기");		
+		
+		regitB.setEnabled(true);
+		editB.setEnabled(false);
+		delB.setEnabled(false);
+		clearB.setEnabled(false);	
+		
+		southP = new JPanel();
+		northP = new JPanel();
+		eastP = new JPanel();
+		westP = new JPanel();
+		westAr = new JPanel[6];
+		
+		Container con = this.getContentPane();
+		con.setLayout(new BorderLayout());
+		northP.setLayout(new BorderLayout());
+		eastP.setLayout(new FlowLayout(FlowLayout.CENTER));
+		westP.setLayout(new GridLayout(6,1,5,5));
+//		area.setLayout(new FlowLayout(FlowLayout.CENTER));
+		southP.setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		
+		for (int i = 0; i < westAr.length; i++) {
+			westAr[i] = new JPanel();
+			westP.add(westAr[i]);
+		}
+		westAr[0].setLayout(new FlowLayout(FlowLayout.CENTER));
+		westAr[1].setLayout(new FlowLayout(FlowLayout.LEFT));
+		westAr[2].setLayout(new FlowLayout(FlowLayout.LEFT));
+		westAr[3].setLayout(new FlowLayout(FlowLayout.LEFT));
+		westAr[4].setLayout(new FlowLayout(FlowLayout.LEFT));
+		westAr[5].setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		
+		eastP.add(dispL);
+		eastP.add(scroll);
+		
+		westAr[0].add(inputL);
+		
+		westAr[1].add(nameL);
+		westAr[1].add(nameT);
+		
+		westAr[2].add(telL);
+		westAr[2].add(tel1C);
+		westAr[2].add(telhyphenL);
+		westAr[2].add(tel2T);
+		westAr[2].add(telhyphenL2);
+		westAr[2].add(tel3T);
+		
+		westAr[3].add(sexL);
+		westAr[3].add(womanR);
+		westAr[3].add(manR);
+		
+		westAr[4].add(hobbyL);
+		westAr[4].add(readCB);
+		westAr[4].add(movieCB);
+		westAr[4].add(musicCB);
+		westAr[4].add(gameCB);
+		westAr[4].add(shoppingCB);
+		
+		westAr[5].add(regitB);
+		westAr[5].add(editB);
+		westAr[5].add(delB);
+		westAr[5].add(clearB);
+		
+		southP.add(infoL);
+		southP.add(area);
+
+		northP.add("Center", eastP);
+		northP.add("West", westP);
+		
+		con.add("North", northP);
+		con.add("Center",southP);
+
+		con.setBackground(Color.ORANGE);
+		
+		setBounds(700, 100, 650, 500);
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+	}
+
+	public static void main(String[] args) {
+		new FriendManager();
+
+	}
+
+}

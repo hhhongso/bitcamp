@@ -1,0 +1,21 @@
+package dbTest.dao;
+
+public class UpdateTest {
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	public UpdateTest() {
+		try {
+			Class.forName(driver);
+			System.out.println("driver loading!");	
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public static void main(String[] args) {
+		UpdateTest ut = new UpdateTest();
+
+	}
+
+}

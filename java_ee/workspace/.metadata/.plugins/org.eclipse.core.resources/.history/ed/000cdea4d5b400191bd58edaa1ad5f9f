@@ -1,0 +1,15 @@
+package friend.action;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class Regit {
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
+	private String user = "java"; 
+	private String pw = "dkdlxl"; 
+	
+	private Connection conn; 
+	private PreparedStatement pstmt;
+
+}

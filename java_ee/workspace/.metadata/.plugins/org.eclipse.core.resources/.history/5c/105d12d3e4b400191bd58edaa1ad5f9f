@@ -1,0 +1,80 @@
+package friend.bean;
+
+public class FriendDTO {
+	private String name; 
+	private int tel1, tel2, tel3, sex, read, movie, music, game, shopping;
+	
+	public FriendDTO(String name, int tel1, int tel2, int tel3, int sex, int read, int movie, int music, int game, int shopping) {
+		this.name = name; 
+		this.tel1 = tel1;
+		this.tel2 = tel2;
+		this.tel3 = tel3;
+		this.sex = sex;
+		this.read = read;
+		this.movie = movie;
+		this.music = music;
+		this.game = game;
+		this.shopping = shopping;
+	}
+
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public int getTel1() {
+		return tel1;
+	}
+
+	public int getTel1() {
+		return tel1;
+	}
+
+
+
+	public int getTel2() {
+		return tel2;
+	}
+
+
+
+	public int getTel3() {
+		return tel3;
+	}
+
+
+	public int getSex() {
+		return sex;
+	}
+
+
+	public int getRead() {
+		return read;
+	}
+
+
+	public int getMovie() {
+		return movie;
+	}
+
+
+
+	public int getMusic() {
+		return music;
+	}
+
+
+
+	public int getGame() {
+		return game;
+	}
+
+
+
+	public int getShopping() {
+		return shopping;
+	}
+
+
+}

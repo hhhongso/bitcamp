@@ -3,11 +3,16 @@
 
 package friend.action;
 
+import friend.dao.FriendDAO;
+import friend.bean.FriendDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -22,18 +27,23 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class FriendManager extends JFrame {
+public class FriendManager extends JFrame implements ActionListener, ListSelectionListener {
 	private JLabel nameL, telL, telhyphenL, telhyphenL2, sexL, hobbyL, inputL, dispL, infoL;
 	private JTextField nameT, tel2T, tel3T; 
 	private JComboBox<String> tel1C;
 	private JRadioButton manR, womanR; 
 	private JCheckBox readCB, movieCB, musicCB, gameCB, shoppingCB; 
 	private JList<FriendDTO> jlist; //Jlist: model 들어감요 , scroll도 있어야 
+	private DefaultListModel<FriendDTO> model;
 	private JTextArea area;
 	private JButton regitB, editB, delB, clearB;
 	private JPanel southP, northP, eastP, westP; 
-	private JPanel[] westAr;
+	private JPanel[] westAr;	
+	
+	private ArrayList<FriendDTO> list;
 	
 	public FriendManager() {		
 		nameL = new JLabel("이       름:");
@@ -67,14 +77,18 @@ public class FriendManager extends JFrame {
 		shoppingCB = new JCheckBox("쇼핑");		
 		readCB.setSelected(true);		
 
-		DefaultListModel<FriendDTO> model = new DefaultListModel<FriendDTO>(); 
-		jlist = new JList<FriendDTO>(model);
+		//model = new DefaultListModel<FriendDTO>(); 		
+		//jlist = new JList<FriendDTO>(model); 이래도 되고
+		jlist = new JList<FriendDTO>(new DefaultListModel<FriendDTO>());
+		model = (DefaultListModel<FriendDTO>)jlist.getModel();
+		
 		JScrollPane scroll = new JScrollPane(jlist);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		area = new JTextArea(8,50);
 		JScrollPane scroll2 = new JScrollPane(area);
 		scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);	
+		area.setEditable(false);
 
 		regitB = new JButton("등록");
 		editB = new JButton("수정");
@@ -84,7 +98,7 @@ public class FriendManager extends JFrame {
 		regitB.setEnabled(true);
 		editB.setEnabled(false);
 		delB.setEnabled(false);
-		clearB.setEnabled(false);	
+		clearB.setEnabled(true);	
 		
 		southP = new JPanel();
 		northP = new JPanel();
@@ -94,10 +108,10 @@ public class FriendManager extends JFrame {
 		
 		Container con = this.getContentPane();
 		con.setLayout(new BorderLayout());
-		northP.setLayout(new BorderLayout());
 		eastP.setLayout(new FlowLayout(FlowLayout.CENTER));
 		westP.setLayout(new GridLayout(6,1,5,5));
 		southP.setLayout(new FlowLayout(FlowLayout.CENTER));	
+		northP.setLayout(new BorderLayout());
 		
 		for (int i = 0; i < westAr.length; i++) {
 			westAr[i] = new JPanel();
@@ -154,13 +168,160 @@ public class FriendManager extends JFrame {
 		
 		setBounds(700, 100, 650, 500);
 		setVisible(true);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		//DB에서 모든 레코드를 꺼내 와 jlist 에 출력
+		FriendDAO dao = FriendDAO.getInstance();
+		list = dao.getFriendDisp();
+
+			for(FriendDTO dto : list) {
+				model.addElement(dto);
+			}
+
 		
 	}
 
+
+//main =======================================================================================================================================
+
+	private void event() {
+		regitB.addActionListener(this);
+		editB.addActionListener(this);
+		delB.addActionListener(this);
+		clearB.addActionListener(this);
+		
+		jlist.addListSelectionListener(this);
+	
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == regitB) {
+			//1. 데이터 받아오기
+			String name = nameT.getText();
+			String tel1 = (String) tel1C.getSelectedItem();
+			String tel2 = tel2T.getText();
+			String tel3 = tel3T.getText();
+			
+			int sex = 0; 			
+			if(womanR.isSelected()) { 	sex = 1;}
+			else { sex = 0; }
+			
+			int read = readCB.isSelected() ? 1 : 0;
+			int movie = movieCB.isSelected() ? 1 : 0;
+			int music = musicCB.isSelected() ? 1 : 0;
+			int game = gameCB.isSelected() ? 1 : 0;
+			int shopping = shoppingCB.isSelected() ? 1 : 0;
+
+			FriendDTO dto = new FriendDTO();
+			dto.setName(name);
+			dto.setTel1(tel1);
+			dto.setTel2(tel2);
+			dto.setTel3(tel3);
+			dto.setSex(sex);
+			dto.setRead(read);
+			dto.setMovie(movie);
+			dto.setMusic(music);
+			dto.setGame(game);
+			dto.setShopping(shopping);
+			
+			//2. DB 연결하기하여 insert			
+			FriendDAO dao = FriendDAO.getInstance(); //DAO는 한번만 생성하고 프로그램이 종료될 때까지 같은 것을 사용한다 >>> singleTon
+			int seq = dao.getSeq(); // DB에서 시퀀스 번호 가져오기
+			dto.setSeq(seq);
+			
+			int count = dao.regitFriend(dto);
+			clear();
+			
+			//3. 응답: 분석 란에 "데이터 등록 완료" => 목록 란에 등록된 이름을 출력
+			if(count == 1) area.setText(count + "row created.");
+			else area.setText("등록 실패");
+			model.addElement(dto);
+	
+		} else if(e.getSource() == editB) {			
+			//바꾸고 싶은 데이터를 입력 
+			String name = nameT.getText();
+	//		if(name.equals(dto.getName())) {}
+			
+			// DB 연결하여 update
+			
+			// 데이터 수정 완료 => 목록 란에 출력
+			
+		} else if(e.getSource() == delB) {			
+			//지우고 싶은 데이터를 입력 
+			
+			// DB 연결하여 delete
+			
+			// 데이터 수정 완료 => 목록 란에 출력
+		} else if(e.getSource() == clearB) {
+			clear();
+			regitB.setEnabled(true);
+			editB.setEnabled(false);
+			delB.setEnabled(false);
+	
+			
+		}
+		
+	} // actionPerformed
+	
+	
+	@Override
+	public void valueChanged(ListSelectionEvent e) {				
+			FriendDTO dto = jlist.getSelectedValue();
+			nameT.setText(dto.getName());
+			tel1C.setSelectedItem(dto.getTel1());
+			tel2T.setText(dto.getTel2());
+			tel3T.setText(dto.getTel3());
+			int sex = 0; 
+			if(dto.getSex() == 1) {womanR.setSelected(true);}
+			else { manR.setSelected(true);	}
+			if(dto.getRead() == 1) {readCB.setSelected(true);} 
+			else { readCB.setSelected(false); }
+			if(dto.getMovie() == 1) {movieCB.setSelected(true);}
+			else {movieCB.setSelected(false);}
+			if(dto.getMusic() == 1) {musicCB.setSelected(true);}
+			else {musicCB.setSelected(false);}
+			if(dto.getGame() == 1) {gameCB.setSelected(true);}
+			else {gameCB.setSelected(false);}
+			if(dto.getShopping() == 1) {shoppingCB.setSelected(true);}
+			else {shoppingCB.setSelected(false);}
+			
+			regitB.setEnabled(false);
+			editB.setEnabled(true);
+			delB.setEnabled(true);
+			clearB.setEnabled(true);
+		}
+
+
+	
+	private void clear() {
+		nameT.setText("");
+		tel1C.setSelectedItem("010");		//tel1C.setSelectedIndex(0);
+		tel2T.setText("");
+		tel3T.setText("");
+		womanR.setSelected(true);
+		readCB.setSelected(false);
+		movieCB.setSelected(false);
+		musicCB.setSelected(false);
+		gameCB.setSelected(false);
+		shoppingCB.setSelected(false);
+		
+		area.setText("");
+	}
+
+
+//main =======================================================================================================================================
 	public static void main(String[] args) {
-		new FriendManager();
+		new FriendManager().event();
 
 	}
+
+
+
+
+
+
 
 }

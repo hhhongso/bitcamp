@@ -18,19 +18,19 @@ class URLTest2 {
 		String str = "18K";
 
 		while((data = br.readLine()) != null) {
+			data = data.toUpperCase(); // 대소문자 가리지 않고 
+
 //			contains 로는 한 줄에 2개 있는 경우를 잡을 수 없음 
 //			if(data.contains("18K") || data.contains("18k")) count++;
 
 		//문자열 내에서 지정된 인덱스로부터 검색을 시작해서 지정된 문자가 최초로 출현하는 위치의 인덱스를 리턴한다.
-			while(true) {
-				index = data.indexOf(str, index);
-				if(index != -1){
-					count++;
-					index=index + str.length();
-				}
-				else break;	
+			while((index = data.indexOf(str, index)) != -1) {				
+				count++;
+				index += str.length();
 			}
-		}//while
+			index = 0;
+			
+		}//전체 while
 
 
 		//정규표현식
@@ -40,8 +40,6 @@ class URLTest2 {
 	
 
 		System.out.println("18K/ 18k의 개수:" + count); //82
-	
-
 		br.close();
 	}
 }

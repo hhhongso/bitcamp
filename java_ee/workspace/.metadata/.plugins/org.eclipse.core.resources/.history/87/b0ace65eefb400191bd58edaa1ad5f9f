@@ -1,0 +1,93 @@
+package friend.dao;
+//DAO: Database Access Operation : 
+
+import friend.bean.FriendDTO;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+public class FriendDAO {
+	private static FriendDAO instance;
+	public static FriendDAO getInstance() {
+		if(instance == null) {
+			synchronized (FriendDAO.class) {
+				instance = new FriendDAO();
+			}
+		}
+		return instance;
+	}
+	
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
+	private String user = "java"; 
+	private String password = "dkdlxl"; 
+	
+	private Connection conn; 
+	private PreparedStatement pstmt;
+	private FriendDTO dto; 
+	
+	public FriendDAO() {
+		try {
+			Class.forName(driver);
+			System.out.println("load");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getConnection() {
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			System.out.println("connected!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void regitFriend(FriendDTO dto) {
+		try {
+			
+			String sql = "INSERT INTO FRIEND(SEQ, NAME, TEL1, TEL2, TEL3, SEX, READ, MOVIE, MUSIC, GAME, SHOOPING)"
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement(sql);
+			
+
+			pstmt.setInt(1, dto.getSeq());		
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getTel1());
+			pstmt.setString(4, dto.getTel2());
+			pstmt.setString(5, dto.getTel3());
+			pstmt.setInt(6, dto.getSex());
+			pstmt.setInt(7, dto.getRead());
+			pstmt.setInt(8, dto.getMovie());
+			pstmt.setInt(9, dto.getMusic());
+			pstmt.setInt(10, dto.getGame());
+			pstmt.setInt(11, dto.getShopping());
+		
+			int count = pstmt.executeUpdate();
+			System.out.println(count);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+	}
+
+}

@@ -1,8 +1,9 @@
 enum Info{
-	JOIN, EXIT, SEND, SECRET
+	JOIN, EXIT, SEND //, SECRET
 }
 
 class InfoDTO implements java.io.Serializable {
+	private static final long serialVersionUID = 1L; //외부에서도 접근할 수 있도록 시리얼라이즈 버전을 맞춘다. 
 	private String nickName; 
 	private String message; 
 	private Info command; 

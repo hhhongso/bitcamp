@@ -1,0 +1,75 @@
+package friend.action;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class Regit {
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
+	private String user = "java"; 
+	private String password = "dkdlxl"; 
+	
+	private Connection conn; 
+	private PreparedStatement pstmt;
+	private FriendManager fm; 
+	
+	public Regit() {
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void getConnection() {
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			System.out.println("connected!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void regitProcess() {
+		try {
+			String sql = "INSERT INTO FRIEND(SEQ, NAME, TEL1, TEL2, TEL3, SEX, READ, MOVIE, MUSIC, GAME, SHOOPING)"
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
+		
+			pstmt.setInt(1, seq);
+			pstmt.setString(2, fm.getNameT().getText());
+			pstmt.setInt(3, fm.getTel1C().);
+			pstmt.setInt(4, Integer.parseInt(fm.getTel2T().getText()));
+			pstmt.setInt(5, Integer.parseInt(fm.getTel3T().getText()));
+			pstmt.setBoolean(6, fm.getWomanR().isSelected());
+			pstmt.setBoolean(7, fm.getReadCB().isSelected());
+			pstmt.setBoolean(8, fm.getMovieCB().isSelected());
+			pstmt.setBoolean(9, fm.getMusicCB().isSelected());
+			pstmt.setBoolean(10, fm.getGameCB().isSelected());
+			pstmt.setBoolean(11, fm.getShoppingCB().isSelected());
+	
+		
+		
+			int count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+	}
+
+}

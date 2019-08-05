@@ -155,4 +155,65 @@ public class FriendDAO {
 		return list;
 	}
 
+	public int editFriend(FriendDTO dto) {
+		getConnection();
+		int count = 0; 
+		String sql = "UPDATE FRIEND SET NAME = ?, TEL1 = ?, TEL2 = ?, TEL3 = ?, SEX = ?, READ = ?, MOVIE = ?, MUSIC = ?, GAME = ?, SHOOPING = ?"
+				+ "WHERE SEQ = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);				
+
+			pstmt.setString(1, dto.getName());
+			pstmt.setString(2, dto.getTel1());
+			pstmt.setString(3, dto.getTel2());
+			pstmt.setString(4, dto.getTel3());
+			pstmt.setInt(5, dto.getSex());
+			pstmt.setInt(6, dto.getRead());
+			pstmt.setInt(7, dto.getMovie());
+			pstmt.setInt(8, dto.getMusic());
+			pstmt.setInt(9, dto.getGame());
+			pstmt.setInt(10, dto.getShopping());
+			pstmt.setInt(11, dto.getSeq());		
+
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return count;
+	}
+
+	public int deleteFriend(int seq) {
+		getConnection();
+		int count = 0; 
+		
+		String sql = "DELETE FRIEND WHERE SEQ = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, seq);		
+			
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return count;
+	}
+
 }

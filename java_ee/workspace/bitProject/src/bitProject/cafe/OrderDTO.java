@@ -1,42 +1,35 @@
 package bitProject.cafe;
 
 public class OrderDTO {
-	private String menuOption;
-	private String menuSelect; 
-	private String amount; 
-	private int price;
+	private String id;
+	private String menuName; 
+	private int amount; 
+	private int menuPrice;
+	private int totPrice;
 	
-	public String getMenuOption() {
-		return menuOption;
+	public String setId(String id) {
+		this.id = id;
+		return id;
 	}
-	public void setMenuOption(String menuOption) {
-		this.menuOption = menuOption;
+	
+	public String getMenuName() {
+		return menuName;
 	}
-	public String getMenuSelect() {
-		return menuSelect;
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
 	}
-	public void setMenuSelect(String menuSelect) {
-		this.menuSelect = menuSelect;
-	}
-	public String getAmount() {
+	public int getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 	
-	public int getPrice() {
-		return price;
+	public int getMenuPrice() {
+		return menuPrice;
 	}
-	public void setPrice(int price) {
-		this.price = price;
+	public void setMenuPrice(int menuPrice) {
+		this.menuPrice = menuPrice;
 	}
-	
-	@Override
-	public String toString() {
-		return menuSelect + "\t" + amount + "\t" + price;
-	} 
-	
-	
 
 }

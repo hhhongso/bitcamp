@@ -1,8 +1,8 @@
 package bitProject.cafe.dto;
 
-import javax.swing.JCheckBox;
+import java.io.Serializable;
 
-public class MemberDTO {
+public class MemberDTO implements Serializable {
 	private String id;
 	private String pw;
 	private String name;
@@ -15,14 +15,12 @@ public class MemberDTO {
 	private int birthMonth;
 	private int birthDate;
 	private boolean isStaff;
-	private boolean isManager;
 	private boolean isAgreeEssen;
 	private boolean isAgreeSelec;
-	private int memberPoint;
-	
-	
+
 	public MemberDTO(String id, String pw, String name, String emailAccount, String emailDomain, String tel1,
-			String tel2, String tel3, int birthYear, int birthMonth, int birthDate, boolean isAgreeEssen, boolean isAgreeSelec) {
+			String tel2, String tel3, int birthYear, int birthMonth, int birthDate, boolean isAgreeEssen,
+			boolean isAgreeSelec) {
 		super();
 		this.id = id;
 		this.pw = pw;
@@ -35,74 +33,97 @@ public class MemberDTO {
 		this.birthYear = birthYear;
 		this.birthMonth = birthMonth;
 		this.birthDate = birthDate;
+		isStaff = false;
 		this.isAgreeEssen = isAgreeEssen;
 		this.isAgreeSelec = isAgreeSelec;
-		this.memberPoint = 0;
-	}
-	
-	// 테스트용 스태프 생성자
-	public MemberDTO(String id, String pw, String name, String emailAccount, String emailDomain, String tel1,
-			String tel2, String tel3, int birthYear, int birthMonth, int birthDate, boolean isStaff, boolean isAgreeEssen, boolean isAgreeSelec) {
-		super();
-		this.id = id;
-		this.pw = pw;
-		this.name = name;
-		this.emailAccount = emailAccount;
-		this.emailDomain = emailDomain;
-		this.tel1 = tel1;
-		this.tel2 = tel2;
-		this.tel3 = tel3;
-		this.birthYear = birthYear;
-		this.birthMonth = birthMonth;
-		this.birthDate = birthDate;
-		this.isStaff = isStaff;		
-		this.isAgreeEssen = isAgreeEssen;
-		this.isAgreeSelec = isAgreeSelec;		
-		this.memberPoint = 0;
 	}
 
 	public String getId() {
 		return id;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getPw() {
 		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getEmailAccount() {
 		return emailAccount;
+	}
+
+	public void setEmailAccount(String emailAccount) {
+		this.emailAccount = emailAccount;
 	}
 
 	public String getEmailDomain() {
 		return emailDomain;
 	}
 
+	public void setEmailDomain(String emailDomain) {
+		this.emailDomain = emailDomain;
+	}
+
 	public String getTel1() {
 		return tel1;
+	}
+
+	public void setTel1(String tel1) {
+		this.tel1 = tel1;
 	}
 
 	public String getTel2() {
 		return tel2;
 	}
 
+	public void setTel2(String tel2) {
+		this.tel2 = tel2;
+	}
+
 	public String getTel3() {
 		return tel3;
+	}
+
+	public void setTel3(String tel3) {
+		this.tel3 = tel3;
 	}
 
 	public int getBirthYear() {
 		return birthYear;
 	}
 
+	public void setBirthYear(int birthYear) {
+		this.birthYear = birthYear;
+	}
+
 	public int getBirthMonth() {
 		return birthMonth;
 	}
 
+	public void setBirthMonth(int birthMonth) {
+		this.birthMonth = birthMonth;
+	}
+
 	public int getBirthDate() {
 		return birthDate;
+	}
+
+	public void setBirthDate(int birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	public boolean isStaff() {
@@ -113,40 +134,21 @@ public class MemberDTO {
 		this.isStaff = isStaff;
 	}
 
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
-
-	public void setEmailAccount(String emailAccount) {
-		this.emailAccount = emailAccount;
-	}
-
-	public void setEmailDomain(String emailDomain) {
-		this.emailDomain = emailDomain;
-	}
-
-	public void setTel1(String tel1) {
-		this.tel1 = tel1;
-	}
-
-	public void setTel2(String tel2) {
-		this.tel2 = tel2;
-	}
-
-	public void setTel3(String tel3) {
-		this.tel3 = tel3;
-	}
-	
-	
 	public boolean isAgreeEssen() {
 		return isAgreeEssen;
 	}
-	
+
+	public void setAgreeEssen(boolean isAgreeEssen) {
+		this.isAgreeEssen = isAgreeEssen;
+	}
+
 	public boolean isAgreeSelec() {
 		return isAgreeSelec;
 	}
-	
-}
 
+	public void setAgreeSelec(boolean isAgreeSelec) {
+		this.isAgreeSelec = isAgreeSelec;
+	}
+}
 
 

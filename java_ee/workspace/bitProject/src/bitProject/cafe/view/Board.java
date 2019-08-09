@@ -11,92 +11,54 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.EOFException;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
+import bitProject.cafe.dao.Status;
 import bitProject.cafe.dto.BoardDTO;
 import bitProject.cafe.dto.MemberDTO;
 
 public class Board extends JPanel implements ActionListener {
-	private JButton btnAdd, btnDelete;
-	private JTable tblBoard;
-	private Vector<String> vector;
-	private DefaultTableModel model;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -672107422565314302L;
+	private JButton btnWrite, btnDelete;
+	private JTable tableBoardList;
+	private JScrollPane scroll;
+
 	private MemberDTO member;
-	private ArrayList<BoardDTO> listBoard;
 
+	private Vector<String> vtColName; // 컬럼 설정 벡터
+	private Vector<Vector<String>> boardList;
+	private DefaultTableModel modelBoardList;
 
-	public Board(MemberDTO member) { // constructor : MainFrame에서 member를 던져주므로 생성자에서 받아야함
-		this.member = member; // MemberDTO의 모든 필드 가져오기 : member.getId()
-		
-		// ArrayList 생성 : 맨 처음 한번만 만들어져야 하는 것!!
-		listBoard = new ArrayList<BoardDTO>();
-		
-		// Vector로 열 데이터 입력
-		vector = new Vector<String>();
-		vector.addElement("글번호");
-		vector.addElement("내용");
-		vector.addElement("작성자");
-		vector.addElement("작성일");
+	private Vector<Object> vList; // listBoard의 컬럼 별 내용을 넣는 벡터
 
-		// JTable에 적용시킬 model 선언
-		model = new DefaultTableModel(vector, 0){ 
-			@Override // JTable 더블클릭으로 수정 여부
-			public boolean isCellEditable(int r, int c) { 
-				return false; // 수정 불가
-			}
-		};
+	private ClientFrame main;
+
+	public Board(MemberDTO member, ClientFrame main) { // constructor : MainFrame에서 member를 던져주므로 생성자에서 받아야함
+		this.member = member;
+		this.main = main;
 
 		// 글쓰기 버튼과 삭제 버튼
-		btnAdd = new JButton("글쓰기");
-		btnAdd.setBounds(1021, 467, 69, 23);
+		btnWrite = new JButton("글쓰기");
+		btnWrite.setBounds(1021, 467, 69, 23);
 
 		btnDelete = new JButton("삭제");
 		btnDelete.setBounds(1102, 467, 69, 23);
-
-		// 전체적인 JTable 레이아웃
-		tblBoard = new JTable();
-		tblBoard.setModel(model); // JTable에 모델 적용
-		tblBoard.setRowHeight(25); // 한 줄 높이 설정
-		tblBoard.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // JTable 강제로 간격 설정되는 것 컨트롤을 위해 Auto Resize 끄기
-		tblBoard.getColumn("글번호").setPreferredWidth(50);
-		tblBoard.getColumn("내용").setPreferredWidth(800);
-		tblBoard.getColumn("작성자").setPreferredWidth(130);
-		tblBoard.getColumn("작성일").setPreferredWidth(200);
-
-		// 텍스트 가운데 정렬
-		DefaultTableCellRenderer celAlignCenter = new DefaultTableCellRenderer();
-		celAlignCenter.setHorizontalAlignment(JLabel.CENTER);
-		tblBoard.getColumn("글번호").setCellRenderer(celAlignCenter);
-		tblBoard.getColumn("내용").setCellRenderer(celAlignCenter);
-		tblBoard.getColumn("작성자").setCellRenderer(celAlignCenter);
-		tblBoard.getColumn("작성일").setCellRenderer(celAlignCenter);
-		
-		// 최대 한줄만 선택할 수 있게 하기
-		tblBoard.setRowSelectionAllowed(true);
-		tblBoard.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// 세로 줄 안보이게 하기
-		tblBoard.setShowVerticalLines(false);
-		// JTable 컬럼 누르고 움직이면 위치 바꿀 수 있는 것 막기
-		tblBoard.getTableHeader().setReorderingAllowed(false);
-
-
-		// JTable에 JScrollPane추가
-		JScrollPane scroll = new JScrollPane(tblBoard);
-		// 언제나 세로 스크롤 보여주기
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// 전체적인 Board 패널 크기 지정
-		scroll.setPreferredSize(new Dimension(1200, 450));
 
 		// 패널 잡기
 		JPanel pnlMain = new JPanel();
@@ -104,8 +66,10 @@ public class Board extends JPanel implements ActionListener {
 		pnlMain.setBounds(-5, 0, 1200, 460);
 		pnlBottom.setBounds(0, 460, 1200, 40);
 
+		setTable();
+
 		pnlMain.add(scroll);
-		pnlBottom.add(btnAdd);
+		pnlBottom.add(btnWrite);
 		pnlBottom.add(btnDelete);
 
 		// MainFrame에서 패널을 불러올 수 있게 최종 레이아웃 잡기
@@ -114,41 +78,178 @@ public class Board extends JPanel implements ActionListener {
 		this.add(pnlBottom);
 
 		// Board 이벤트 생성
-		btnAdd.addActionListener(this);
+		btnWrite.addActionListener(this);
 		btnDelete.addActionListener(this);
 
 	} // 생성자
-	
-	@Override
-	public void actionPerformed(ActionEvent e) { // ActionListener 이벤트
-		if (e.getSource() == btnAdd) addRow(); // 글쓰기 버튼
-		else if (e.getSource() == btnDelete) deleteRow(); // 지우기 버튼
+
+	public void setTable() {
+		setTableCol();
+		getAllBoardList();
+		modelBoardList = new DefaultTableModel(boardList, vtColName) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8187460638917297235L;
+
+			@Override
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
+		};
+		tableBoardList = new JTable(modelBoardList);
+		tableBoardList.setRowSelectionAllowed(true);
+		tableBoardList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableBoardList.setShowVerticalLines(false);
+		tableBoardList.getTableHeader().setReorderingAllowed(false);
+		setAlignmentCenter(tableBoardList);
+
+		scroll = new JScrollPane(tableBoardList);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setPreferredSize(new Dimension(1200, 450));
 	}
 
-	private void addRow() { // 열 추가하기
-		// JTable을 컨트롤 해야하므로 model도 다시 선언해서 보냄
-		model = (DefaultTableModel) tblBoard.getModel(); 
-		
-		// member.getID()를 실행할 수 있게 MemberDTO와, 행을 추가하기 위해  JTable model를 패러미터로 보냅니다
-		new BoardNew(member, model, listBoard);		
+	public void setTableCol() {
+		// Vector로 열 데이터 입력
+		vtColName = new Vector<String>();
+		vtColName.addElement("글번호");
+		vtColName.addElement("내용");
+		vtColName.addElement("작성자");
+		vtColName.addElement("작성일");
 	}
 
-	private void deleteRow() { // 선택한 열 삭제하기
-		if (tblBoard.getSelectedRow() != -1) {
-			int select = tblBoard.getSelectedRow();
-			System.out.println(select);
-	
-//			BoardAction ba = new BoardAction();
-			// JTable을 컨트롤 해야하므로 model도 다시 선언해서 보냄
-			model = (DefaultTableModel) tblBoard.getModel();
-			// 해당 ArrayList도 지워야하므로 BoardNew에 있는 removeRow메소드로 보냄
-//			ba.removeRow(listBoard, select, model);
-			
-
-			JOptionPane.showMessageDialog(this, "선택한 글을 삭제하였습니다", "삭제", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(this, "삭제할 글을 선택해주세요", "삭제", JOptionPane.ERROR_MESSAGE);
+	public void setAlignmentCenter(JTable table) {
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+		dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel tcm = table.getColumnModel();
+		for (int i = 0; i < tcm.getColumnCount(); i++) {
+			tcm.getColumn(i).setCellRenderer(dtcr);
 		}
 	}
-}
 
+	public void getAllBoardList() {
+		try {
+			main.getOos().writeObject(new BoardDTO(Status.GET_ALL_BOARDLIST));
+			while (true) {
+				Object objectRecieved = main.getOis().readObject();
+				if (objectRecieved instanceof BoardDTO) {
+					BoardDTO board = (BoardDTO) objectRecieved;
+					if (board.getStatus() == Status.GET_ALL_BOARDLIST) {
+						boardList = board.getBoardList();
+						return;
+					} else {
+						return;
+					}
+				} else {
+					return;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) { // ActionListener 이벤트
+		if (e.getSource() == btnWrite) { // 글쓰기 이벤트. Dialog에서 처리.
+			new BoardDialog(main, this);
+
+		} else if (e.getSource() == btnDelete) {
+			// 선택한 곳의 시퀀스넘버를 받아오자.
+			int rowIdx = tableBoardList.getSelectedRow();
+			if (rowIdx == -1) {
+				JOptionPane.showMessageDialog(this, "삭제할 게시글을 선택해주세요.");
+				return;
+			}
+			int seq = Integer.parseInt(tableBoardList.getValueAt(rowIdx, 0) + "");
+			String id = (String) tableBoardList.getValueAt(rowIdx, 1);
+			String text = (String) tableBoardList.getValueAt(rowIdx, 2);
+			String writeTime = (String) tableBoardList.getValueAt(rowIdx, 3);
+			BoardDTO boardDTO = new BoardDTO(id, text, writeTime);
+			boardDTO.setSeq(seq);
+			boardDTO.setStatus(Status.DELETE_BOARD);
+			try {
+				main.getOos().writeObject(boardDTO);
+				main.getOos().flush();
+				Object objectReceived = null;
+				while (true) {
+					try {
+						objectReceived = main.getOis().readObject();
+						if (objectReceived instanceof BoardDTO) {
+							boardDTO = (BoardDTO) objectReceived;
+							if (boardDTO.getStatus() == Status.DELETE_BOARD) {
+								boardDTO.setStatus(Status.GET_ALL_BOARDLIST);
+								main.getOos().writeObject(boardDTO);
+								while (true) {
+									boardDTO = (BoardDTO) main.getOis().readObject();
+									if (boardDTO.getStatus() == Status.GET_ALL_BOARDLIST) {
+										for (int i = 0; i < modelBoardList.getRowCount(); i++) {
+											modelBoardList.removeRow(i);
+											i--;
+										}
+										boardList = boardDTO.getBoardList();
+										for (int i = 0; i < boardList.size(); i++) {
+											modelBoardList.addRow(boardList.get(i));
+										}
+										return;
+									} else {
+										return;
+									}
+								}
+							} else if (boardDTO.getStatus() == Status.FAILURE) {
+								System.out.println("삭제 실패");
+								return;
+							}
+						} else {
+							return;
+						}
+					} catch (EOFException eofe) {
+						objectReceived = null;
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public MemberDTO getMember() {
+		return member;
+	}
+
+	public Vector<Vector<String>> getBoardList() {
+		return boardList;
+	}
+
+	public void setBoardList(Vector<Vector<String>> boardList) {
+		this.boardList = boardList;
+	}
+
+	public JTable getTableBoardList() {
+		return tableBoardList;
+	}
+
+	public void setTableBoardList(JTable tableBoardList) {
+		this.tableBoardList = tableBoardList;
+	}
+
+	public DefaultTableModel getModelBoardList() {
+		return modelBoardList;
+	}
+
+	public void setModelBoardList(DefaultTableModel modelBoardList) {
+		this.modelBoardList = modelBoardList;
+	}
+
+	public Vector<Object> getvList() {
+		return vList;
+	}
+
+	public void setvList(Vector<Object> vList) {
+		this.vList = vList;
+	}
+}

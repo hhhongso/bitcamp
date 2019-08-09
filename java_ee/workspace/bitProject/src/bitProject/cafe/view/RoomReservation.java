@@ -1,35 +1,32 @@
 package bitProject.cafe.view;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.awt.Color;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import bitProject.cafe.dao.RoomDAO;
+import bitProject.cafe.dao.Status;
 import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.RoomDTO;
-import bitProject.cafe.dto.RoomDTO;
-import bitProject.cafe.net.CafeServer;
-import bitProject.cafe.net.CafeServerHandler;
-
-import java.awt.Font;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.GridLayout;
 
 public class RoomReservation extends JPanel implements ActionListener {
-	private ArrayList<RoomDTO> roomList = new ArrayList<RoomDTO>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1594693393272223975L;
 
 	private JTextField tfRoomNum;
 	private JTextField tfCapacity;
@@ -47,14 +44,13 @@ public class RoomReservation extends JPanel implements ActionListener {
 
 	private JButton btnReserve;
 	private JButton btnCheck;
-	private MemberDTO member;
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
 
-	public RoomReservation(MemberDTO member, ObjectInputStream ois, ObjectOutputStream oos) {
+	private MemberDTO member;
+	private ClientFrame main;
+
+	public RoomReservation(MemberDTO member, ClientFrame main) {
 		this.member = member;
-		this.ois = ois;
-		this.oos = oos;
+		this.main = main;
 
 		setBackground(Color.WHITE);
 		setBounds(new Rectangle(0, 0, 1200, 500));
@@ -439,46 +435,99 @@ public class RoomReservation extends JPanel implements ActionListener {
 		}
 
 		if (e.getSource() == btnReserve) { // 예약하기 버튼 눌렀을 때.
-			int cnt = RoomDAO.getInstance().insert(new RoomDTO(selectedRoomNum, member.getId(), selectedYear,
-					selectedMonth + 1, selectedDate, selectedInHour, selectedOutHour));
-			if (cnt != 0) {
-				JOptionPane.showMessageDialog(this, "예약에 성공하였습니다.");
-			} else {
-				System.out.println("예약실패");
+
+			RoomDTO room = new RoomDTO(selectedRoomNum, member.getId(), selectedYear, selectedMonth + 1, selectedDate,
+					selectedInHour, selectedOutHour);
+			room.setStatus(Status.RESERVATION);
+			sendMessageToServer(room);
+			try {
+				while (true) {
+					Object objectRecieved = main.getOis().readObject();
+					if (objectRecieved instanceof RoomDTO) {
+						RoomDTO recivedRoom = (RoomDTO) objectRecieved;
+						if (recivedRoom.getStatus() == Status.RESERVATION) {
+							JOptionPane.showMessageDialog(this, "예약 성공!!!!");
+							break;
+						} else if (recivedRoom.getStatus() == Status.FAILURE) {
+							JOptionPane.showMessageDialog(this, "예약 실패!!!!");
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
 			}
+
 			reset();
 		} else if (e.getSource() == btnCheck) { // 조회하기 버튼 눌렀을 때.
-			ArrayList<RoomDTO> roomList = RoomDAO.getInstance().check(new RoomDTO(selectedRoomNum, member.getId(),
-					selectedYear, selectedMonth + 1, selectedDate, selectedInHour, selectedOutHour));
+			RoomDTO room = new RoomDTO(selectedRoomNum, member.getId(), selectedYear, selectedMonth + 1, selectedDate,
+					selectedInHour, selectedOutHour);
+			room.setStatus(Status.CHECK_MY_RESERVATION);
+			sendMessageToServer(room);
 
-			if (roomList.size() == 0) {
-				for (int i = 0; i < btnRoomArr.length; i++) {
-					btnRoomArr[i].setEnabled(true);
-					btnRoomArr[i].setText("예약가능");
-				}
-			} else {
-				for (RoomDTO room : roomList) {
-					for (int i = 0; i < btnRoomArr.length; i++) {
-						btnRoomArr[i].setEnabled(true);
-						btnRoomArr[i].setText("예약가능");
+			while (true) {
+				try {
+					Object objectRecieved = main.getOis().readObject();
+					if (objectRecieved instanceof RoomDTO) {
+						room = (RoomDTO) objectRecieved;
+						if (room.getStatus() == Status.CHECK_MY_RESERVATION) {
+							ArrayList<RoomDTO> roomList = room.getRoomList();
+
+							if (roomList.size() == 0) {
+								for (int i = 0; i < btnRoomArr.length; i++) {
+									btnRoomArr[i].setEnabled(true);
+									btnRoomArr[i].setText("예약가능");
+								}
+							} else {
+								for (RoomDTO roomDTO : roomList) {
+									for (int i = 0; i < btnRoomArr.length; i++) {
+										btnRoomArr[i].setEnabled(true);
+										btnRoomArr[i].setText("예약가능");
+									}
+									if (selectedInHour < roomDTO.getOutHour()
+											&& selectedInHour >= roomDTO.getInHour()) {
+										// 선택한 inHour가 room에서 가져온 값 사이에 있을 때
+										btnRoomArr[roomDTO.getRoomNum() - 1].setEnabled(false);
+										btnRoomArr[roomDTO.getRoomNum() - 1].setText("예약불가");
+									}
+									if (selectedOutHour <= roomDTO.getOutHour()
+											&& selectedOutHour > roomDTO.getInHour()) {
+										// 선택한 outHour가 room에서 가져온 값 사이에 있을 때
+										btnRoomArr[roomDTO.getRoomNum() - 1].setEnabled(false);
+										btnRoomArr[roomDTO.getRoomNum() - 1].setText("예약불가");
+									}
+									if (selectedInHour < roomDTO.getOutHour()
+											&& selectedOutHour >= roomDTO.getOutHour()) {
+										// 선택한 inHour ~ outHour 가 room의 in/out을 감싸고 있을 때.
+										btnRoomArr[roomDTO.getRoomNum() - 1].setEnabled(false);
+										btnRoomArr[roomDTO.getRoomNum() - 1].setText("예약불가");
+									}
+								}
+							}
+							break;
+						}
+					} else {
+						break;
 					}
-					if (selectedInHour < room.getOutHour() && selectedInHour >= room.getInHour()) {
-						// 선택한 inHour가 room에서 가져온 값 사이에 있을 때
-						btnRoomArr[room.getRoomNum() - 1].setEnabled(false);
-						btnRoomArr[room.getRoomNum() - 1].setText("예약불가");
-					}
-					if (selectedOutHour <= room.getOutHour() && selectedOutHour > room.getInHour()) {
-						// 선택한 outHour가 room에서 가져온 값 사이에 있을 때
-						btnRoomArr[room.getRoomNum() - 1].setEnabled(false);
-						btnRoomArr[room.getRoomNum() - 1].setText("예약불가");
-					}
-					if (selectedInHour < room.getOutHour() && selectedOutHour >= room.getOutHour()) {
-						// 선택한 inHour ~ outHour 가 room의 in/out을 감싸고 있을 때.
-						btnRoomArr[room.getRoomNum() - 1].setEnabled(false);
-						btnRoomArr[room.getRoomNum() - 1].setText("예약불가");
-					}
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public void sendMessageToServer(RoomDTO room) {
+		try {
+			main.getOos().writeObject(room);
+			main.getOos().flush();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -514,5 +563,3 @@ public class RoomReservation extends JPanel implements ActionListener {
 	}
 
 }
-
-

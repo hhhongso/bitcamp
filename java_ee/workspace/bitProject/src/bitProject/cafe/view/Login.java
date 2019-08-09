@@ -3,7 +3,14 @@ package bitProject.cafe.view;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -13,44 +20,44 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import bitProject.cafe.dao.MemberDAO;
+import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 
 public class Login extends JFrame implements ActionListener {
 
-	// 변수 선언
-	private MemberDTO OnAccount; // 로그인 성공 시 여기에 계정 저장
-	private HashMap<String, MemberDTO> hashMemberDTO;
-
-	private ButtonGroup btnGroupLogin;
+	private static final long serialVersionUID = -883731442213980503L;
+	private static final String SERVER_IP = "192.168.0.60";
+	private static final int PORT = 10200;
 
 	private JButton btnLogin;
 	private JButton btnClear;
 	private JButton btnJoin;
 	private JButton btnFind;
 
-	private JLabel lblId;
-	private JLabel lblPw;
-
+	private ButtonGroup btnGroupLogin;
 	private JRadioButton rbtnStaff;
 	private JRadioButton rbtnClient;
 
 	private JTextField tfId;
 	private JPasswordField ptfPw;
 
+	private Socket socket;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+
 	public Login() {
 		// 제목, 틀 생성 및 배치 시작
-		super("선홍유림_로그인");
 		this.setLayout(null);
 		this.setSize(475, 200);
 		this.setLocationRelativeTo(null);
 		Container c = this.getContentPane();
 		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		// 제목, 틀 생성 및 배치 종료
 
-		// 변수 초기화
-		hashMemberDTO = new HashMap<String, MemberDTO>();
+		// 제목, 틀 생성 및 배치 종료
+		JLabel lblId;
+		JLabel lblPw;
 
 		// 로그인 라벨, 필드 생성 및 배치 시작
 		btnGroupLogin = new ButtonGroup();
@@ -93,98 +100,112 @@ public class Login extends JFrame implements ActionListener {
 		c.add(btnJoin);
 		c.add(btnFind);
 
-		// 로그인 라벨, 필드 생성 및 배치 종료
+		connectToServer();
 
+		// 로그인 라벨, 필드 생성 및 배치 종료
 		this.setVisible(true);
-		event();
+		addEvent();
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				Object temp = null;
+				try {
+					oos.writeObject(new LoginDTO("", Status.FAILURE));
+					oos.flush();
+					while (true) {
+						temp = ois.readObject();
+						if (temp instanceof LoginDTO) {
+							LoginDTO loginDTO = (LoginDTO) temp;
+							if (loginDTO.getStatus() == Status.FAILURE) {
+								oos.close();
+								ois.close();
+								socket.close();
+								System.exit(0);
+							}
+						}
+					}
+				} catch (EOFException eofe) {
+					temp = null;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 
-	public void event() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnLogin) {
+			String inputId = tfId.getText();
+			String inputPw = String.valueOf(ptfPw.getPassword());
+			LoginDTO login = new LoginDTO(inputId, inputPw, Status.LOGIN);
+			Object temp = null;
+
+			try {
+				oos.writeObject(login);
+				oos.flush();
+
+				while (true) {
+					try {
+						temp = ois.readObject();
+						if (temp instanceof MemberDTO) {
+							MemberDTO member = (MemberDTO) temp;
+							if (member.getStatus() == Status.LOGIN) {
+								ClientFrame cf = new ClientFrame(member);
+								cf.setVisible(true);
+								this.setVisible(false);
+								break;
+							} else {
+								return;
+							}
+						} else {
+							return;
+						}
+					} catch (EOFException e1) {
+						temp = null;
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else if (e.getSource() == btnJoin) {
+			new Join(this);
+		}
+	}
+
+	public void connectToServer() {
+		try {
+			socket = new Socket(SERVER_IP, PORT);
+			ois = new ObjectInputStream(socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addEvent() {
 		btnLogin.addActionListener(this);
 		btnClear.addActionListener(this);
 		btnJoin.addActionListener(this);
 		btnFind.addActionListener(this);
 	}
 
-	// 로그인 버튼용 메서드
-	public boolean isIdExist(MemberDTO tryingId) { // 입력한 아이디가 해쉬맵에 있는지 확인
-		boolean idExistence = false;
-		idExistence = (tryingId == null) ? false : true;
-		return idExistence;
-	}
-
-	public boolean isIdExist(String id) { // 위에랑 합치는 것 고려
-
-		boolean idExistence = false;
-		idExistence = (hashMemberDTO.get(id) == null) ? false : true;
-		return idExistence;
-	}
-
-	public boolean isPwCorrect(MemberDTO tryingId) { // 입력한 아이디의 비밀번호가 맞는지 확인
-
-		boolean pwCorrect = false;
-		pwCorrect = (tryingId.getPw().equals(String.valueOf(ptfPw.getPassword()))) ? true : false;
-		return pwCorrect;
-	}
-
-	public boolean isStaff(MemberDTO tryingId) { // 입력한 아이디의 권한 확인
-
-		boolean staffCorrect = false; // 1.로그인시도 아이디 스태프 여부 확인 2. 버튼이 스태프인지 확인 3. 둘 다 맞으면 true 반환
-		staffCorrect = (tryingId.isStaff()) ? (rbtnStaff.isSelected() ? true : false) : false;
-		return staffCorrect;
-	}
-
-	public boolean isClient(MemberDTO tryingId) { // 입력한 아이디의 권한 확인
-
-		boolean clientCorrect = false; // 1.로그인시도 아이디 클라이언트 여부 확인 2. 버튼이 클라이언트인지 확인 3. 둘 다 맞으면 true 반환
-		clientCorrect = (!tryingId.isStaff()) ? (rbtnClient.isSelected() ? true : false) : false;
-		return clientCorrect;
-	}
-
-	// 다시입력용 메서드
 	public void clear() {
 		tfId.setText("");
 		ptfPw.setText("");
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		switch (e.getActionCommand()) {
-		case "로그인":
-
-			String tryId = tfId.getText();
-			String tryPw = String.valueOf(ptfPw.getPassword());
-			MemberDTO member = MemberDAO.getInstance().tryLogin(tryId, tryPw);
-			new MainFrame(member).setVisible(true);
-
-			break;
-		case "다시입력":
-			clear();
-			break;
-		case "회원가입":
-			new Join(this);
-			break;
-		case "ID/PW찾기":
-			new Find(this);
-			break;
-		}
-
+	public ObjectInputStream getOis() {
+		return ois;
 	}
 
-	public void setMemberDTO(MemberDTO dto) {
-		this.hashMemberDTO.put(dto.getId(), dto);
+	public ObjectOutputStream getOos() {
+		return oos;
 	}
-
-	public HashMap<String, MemberDTO> getHashMemberDTO() {
-		return hashMemberDTO;
-	}
-
-	public static void main(String[] args) {
-		Login login = new Login();
-
-	}
-
 }
-
-

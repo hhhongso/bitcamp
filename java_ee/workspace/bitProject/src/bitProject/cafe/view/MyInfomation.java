@@ -1,17 +1,21 @@
 package bitProject.cafe.view;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
-import java.awt.Color;
-import java.awt.Dimension;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -19,17 +23,16 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import bitProject.cafe.dao.RoomDAO;
+import bitProject.cafe.dao.Status;
 import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.RoomDTO;
 
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.JTable;
-
 public class MyInfomation extends JPanel implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1813802878658133486L;
 	private JTextField tfId;
 	private JPasswordField ptfPwCurr;
 	private JPasswordField ptfPwNew;
@@ -54,9 +57,11 @@ public class MyInfomation extends JPanel implements ActionListener {
 	private JButton btnCancel;
 
 	private JPanel pnlRoomList;
+	private ClientFrame main;
 
-	public MyInfomation(MemberDTO member) {
+	public MyInfomation(MemberDTO member, ClientFrame main) {
 		this.member = member;
+		this.main = main;
 
 		setBackground(Color.WHITE);
 		setBounds(new Rectangle(0, 0, 1200, 500));
@@ -252,6 +257,7 @@ public class MyInfomation extends JPanel implements ActionListener {
 		// tableModel에 컬럼명, DB에서 가져온 예약리스트를 넣음.
 		// 수정 불가능하게 막음.
 		modelRoomList = new DefaultTableModel(reservationList, vtColName) {
+			@Override
 			public boolean isCellEditable(int i, int c) {
 				return false;
 			}
@@ -277,29 +283,53 @@ public class MyInfomation extends JPanel implements ActionListener {
 
 	public void setTableCol() {
 		vtColName = new Vector<String>();
-		vtColName.add("방 번호");
 		vtColName.add("연도");
 		vtColName.add("월");
 		vtColName.add("일");
 		vtColName.add("시작시간");
 		vtColName.add("종료시간");
+		vtColName.add("방 번호");
 	}
 
 	public void getMyReservation() {
-		reservationList = RoomDAO.getInstance().getMyReservation(member.getId());
+		RoomDTO room = new RoomDTO(member.getId());
+		room.setStatus(Status.GET_MY_RESERVATION);
+		try {
+			main.getOos().writeObject(room);
+			main.getOos().flush();
+			while (true) {
+				Object objectReceived = null;
+				try {
+					objectReceived = main.getOis().readObject();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				if (objectReceived instanceof RoomDTO) {
+					RoomDTO roomDTO = (RoomDTO) objectReceived;
+					if (roomDTO.getStatus() == Status.GET_MY_RESERVATION) {
+						reservationList = roomDTO.getReservationList();
+						return;
+					} else {
+						return;
+					}
+				} else {
+					return;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnUpdateReservation) {
+		if (e.getSource() == btnUpdateReservation) { // 갱신
 			btnCancel.setEnabled(true);
 			for (int i = 0; i < modelRoomList.getRowCount(); i++) {
 				modelRoomList.removeRow(i);
 				i--;
 			}
-
 			getMyReservation();
-
 			for (int i = 0; i < reservationList.size(); i++) {
 				modelRoomList.addRow(reservationList.get(i));
 			}
@@ -317,20 +347,32 @@ public class MyInfomation extends JPanel implements ActionListener {
 			int inHour = (Integer) tableReservationList.getValueAt(rowIdx, 4);
 			int outHour = (Integer) tableReservationList.getValueAt(rowIdx, 5);
 
-			int cnt = RoomDAO.getInstance()
-					.deleteReservation(new RoomDTO(roomNum, member.getId(), year, month, date, inHour, outHour));
+			try {
+				RoomDTO room = new RoomDTO(roomNum, member.getId(), year, month, date, inHour, outHour);
+				room.setStatus(Status.CANCEL_MY_RESERVATION);
+				main.getOos().writeObject(room);
+				main.getOos().flush();
 
-			if (cnt != 0) {
-				System.out.println("성공적으로 삭제하였습니다.");
-			} else {
-				System.out.println("삭제 실패");
-				return;
+				Object objectReceived = null;
+				while (true) {
+					objectReceived = main.getOis().readObject();
+					if (objectReceived instanceof RoomDTO) {
+						room = (RoomDTO) objectReceived;
+						if (room.getStatus() == Status.CANCEL_MY_RESERVATION) {
+							modelRoomList.removeRow(rowIdx);
+							btnCancel.setEnabled(false);
+							return;
+						} else if (room.getStatus() == Status.FAILURE) {
+							System.out.println("예약실패");
+							return;
+						}
+					}
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
 			}
-
-			modelRoomList.removeRow(rowIdx);
-			btnCancel.setEnabled(false);
 		}
 	}
 }
-
-

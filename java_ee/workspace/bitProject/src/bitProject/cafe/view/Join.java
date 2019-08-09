@@ -2,7 +2,6 @@ package bitProject.cafe.view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -12,8 +11,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.Properties;
 
-import javax.swing.ButtonGroup;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -21,20 +34,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
-import bitProject.cafe.dao.MemberDAO;
+import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 
 public class Join extends JFrame implements KeyListener, ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6364185965047627498L;
 	private String inEmailConfirmCode;
 	private String exEmailConfirmCode;
 	private boolean emailConfirm; // 나중에 로컬변수 변경 여부 확인
-
-	private ButtonGroup btnGroupLogin;
 
 	private JButton btnIdConfirm;
 	private JButton btnEmailConfirm;
@@ -45,32 +63,10 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 	private JCheckBox cbxInfoAgreeEssen;
 	private JCheckBox cbxInfoAgreeSelec;
 
-	private JLabel lblJoin;
-	private JLabel lblId;
 	private JLabel lblIdWaring;
-	private JLabel lblIdEx;
-	private JLabel lblPw;
-	private JLabel lblPwEx;
 	private JLabel lblPwWaring;
-	private JLabel lblPwConfirm;
-	private JLabel lblPwExConfirm;
 	private JLabel lblPwConfirmWaring;
-	private JLabel lblName;
-	private JLabel lblNameEx;
-	private JLabel lblEmail;
-	private JLabel lblEmailAt;
-	private JLabel lblEmailConfirm;
 	private JLabel lblEmailConfirmWaring;
-	private JLabel lblTel;
-	private JLabel lblTelHyphen1;
-	private JLabel lblTelHyphen2;
-	private JLabel lblBirth;
-	private JLabel lblBirthYear;
-	private JLabel lblBirthMonth;
-	private JLabel lblBirthDate;
-
-	private JLabel lblInfoAgreeEssen;
-	private JLabel lblInfoAgreeSelec;
 
 	private JTextArea taInfoAgreeEssen;
 	private JTextArea taInfoAgreeSelec;
@@ -89,30 +85,52 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 	private JTextField tfBirthMonth;
 	private JTextField tfBirthDate;
 
-	private JPanel pnlId;
-	private JPanel pnlPW;
-	private JPanel pnlPWConfirm;
-	private JPanel pnlName;
-	private JPanel pnlEmail;
-	private JPanel pnlEmailConfirm;
-	private JPanel pnlTel;
-	private JPanel pnlBirth;
-	private JPanel pnlInfoAgree;
-	private JPanel pnlComplete;
-
 	private Login login;
 
 	public Join(Login login) {
 		super("선홍유림_회원가입");
+		this.login = login;
+
 		this.setLayout(null);
 		setSize(500, 600);
 		setLocationRelativeTo(login);
-		this.login = login;
-		Container c = this.getContentPane(); // 안쓰이면 나중에 삭제
 		this.setResizable(false);
 		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
-		// 제목, 틀 생성 및 배치 종료
 
+		// 제목, 틀 생성 및 배치 종료
+		JLabel lblJoin;
+		JLabel lblId;
+		JLabel lblIdEx;
+		JLabel lblPw;
+		JLabel lblPwEx;
+		JLabel lblPwConfirm;
+		JLabel lblPwExConfirm;
+		JLabel lblName;
+		JLabel lblEmail;
+		JLabel lblEmailAt;
+		JLabel lblEmailConfirm;
+		JLabel lblTel;
+		JLabel lblTelHyphen1;
+		JLabel lblTelHyphen2;
+		JLabel lblBirthYear;
+		JLabel lblBirthMonth;
+		JLabel lblBirthDate;
+		JLabel lblInfoAgreeEssen;
+		JLabel lblInfoAgreeSelec;
+
+		JPanel pnlId;
+		JPanel pnlPW;
+		JPanel pnlPWConfirm;
+		JPanel pnlName;
+		JPanel pnlEmail;
+		JPanel pnlEmailConfirm;
+		JPanel pnlTel;
+		JPanel pnlBirth;
+		JPanel pnlInfoAgree;
+		JPanel pnlComplete;
+
+		JScrollPane scrollInfoAgreeEssen;
+		JScrollPane scrollInfoAgreeSelec;
 		// 변수 초기화
 		// 테스트용 입력
 
@@ -293,14 +311,18 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 
 		// 11번째 행
 		taInfoAgreeEssen = new JTextArea();
-		taInfoAgreeEssen.setText("1. 수집하는 개인정보 \n 이름, 이메일 \n 동의하지 않을 경우 회원가입 불가");
+		taInfoAgreeEssen.setText(" 1. 수집하는 개인정보 : 이름, 이메일 \n 2. 목적  \n 예약자 확인, 예약확인 안내메일 발송 \n * 동의하지 않을 경우 회원가입 불가 ");
 		taInfoAgreeEssen.setBorder(new LineBorder(Color.GRAY));
 		taInfoAgreeEssen.setEditable(false);
+
+		scrollInfoAgreeEssen = new JScrollPane(taInfoAgreeEssen);
+		scrollInfoAgreeEssen.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 		gbc.ipadx = 1;
 		gbc.ipady = 1;
 		gbc.insets = new Insets(0, 20, 0, 20);
 		gbc.fill = GridBagConstraints.BOTH;
-		addGrid(gbl, gbc, taInfoAgreeEssen, 1, 11, 6, 1, 3, 3);
+		addGrid(gbl, gbc, scrollInfoAgreeEssen, 1, 11, 6, 1, 0, 0);
 
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(0, 0, 0, 0);
@@ -311,14 +333,19 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 
 		// 13번째 행
 		taInfoAgreeSelec = new JTextArea();
-		taInfoAgreeSelec.setText("1. 수집하는 개인정보 \n 생년월일, 전화번호 \n 동의하지 않을 경우 예약시간 문자 안내 및 생일 쿠폰 서비스 불가");
+		taInfoAgreeSelec.setText(
+				" 1. 수집하는 개인정보 : 생년월일, 전화번호 \n 2. 목적\n 예약자 확인문자 발송, 생일쿠폰 발송 \n * 동의하지 않을 경우 예약시간 문자 안내 및 생일 쿠폰 서비스 불가");
 		taInfoAgreeSelec.setBorder(new LineBorder(Color.GRAY));
 		taInfoAgreeSelec.setEditable(false);
+
+		scrollInfoAgreeSelec = new JScrollPane(taInfoAgreeSelec);
+		scrollInfoAgreeSelec.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 		gbc.ipadx = 1;
 		gbc.ipady = 1;
 		gbc.insets = new Insets(0, 20, 0, 20);
 		gbc.fill = GridBagConstraints.BOTH;
-		addGrid(gbl, gbc, taInfoAgreeSelec, 1, 13, 6, 1, 3, 3);
+		addGrid(gbl, gbc, scrollInfoAgreeSelec, 1, 13, 6, 1, 1, 1);
 
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(0, 0, 0, 0);
@@ -343,17 +370,37 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 		pnlComplete.add(btnCancel);
 
 		addGrid(gbl, gbc, pnlComplete, 1, 15, 5, 1, 1, 1);
-
 		this.setVisible(true);
-
 		event();
-
 	}
 
 	public boolean isIdOverlap() { // 동일한 아이디가 있으면 true, 없으면 false
-		boolean idOverlap = false;
-		idOverlap = login.isIdExist(tfId.getText());
-		return idOverlap;
+		boolean result = false;
+		String inputId = tfId.getText();
+		Object temp = null;
+		try {
+			login.getOos().writeObject(new LoginDTO(inputId, Status.CHECK_MY_ID));
+			login.getOos().flush();
+			while (true) {
+				temp = login.getOis().readObject();
+				if (temp instanceof LoginDTO) {
+					LoginDTO loginDTO = (LoginDTO) temp;
+					if (loginDTO.getStatus() == Status.FAILURE) {
+						result = true;
+						break;
+					} else if (loginDTO.getStatus() == Status.CHECK_MY_ID) {
+						break;
+					}
+				}
+			}
+		} catch (EOFException e) {
+			temp = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public boolean isIdValidation() { // 아이디 유효성 검사, 유효하지 않으면 false 반환 // pw랑 생각 좀 필요
@@ -420,8 +467,62 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 		return pWC;
 	}
 
-	public boolean isEmailConfirm() { // 이메일 코드가 동일한지 체크, 추후 추가용 기본 테스트값 abcdef
+	public void sendEmail(String[] mailAddresses, String fromEmail, String fromName, String subject, String content) {
 
+		Properties props = System.getProperties();
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.host", "smtp.gmail.com"); // 지메일
+		props.put("mail.smtp.port", "587"); // tls용 지메일 포트번호
+		props.put("mail.smtp.user", "bitProject.cafe"); // 보내는 사람 이름? 역할이 뭔지 모르겠음
+		props.put("mail.smtp.auth", "true");
+
+		try {
+			Authenticator cafeAccount = new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication("aquavictoria2", "fkatptm4"); // 보낼 지메일 계정
+				}
+			};
+
+			Session mailSession = Session.getInstance(props, cafeAccount);
+			Message msg = new MimeMessage(mailSession);
+			msg.setFrom(new InternetAddress(fromEmail, MimeUtility.encodeText(fromName, "B", "UTF-8"))); // 보내는 사람 설정
+
+			int mailCount = mailAddresses.length;
+			InternetAddress[] addresses = new InternetAddress[mailCount];
+			for (int i = 0; mailCount > i; i++) {
+				addresses[i] = new InternetAddress(mailAddresses[i]);
+			}
+			msg.setRecipients(Message.RecipientType.TO, addresses);
+			msg.setSubject(subject);
+			msg.setSentDate(new Date()); // 보내는 날짜 = 현재 시간
+			msg.setContent(content, "text/html;charset=euc-kr"); // html 형식 내용설정
+
+			Transport.send(msg); // 메일 보내기
+
+		} catch (AddressException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public String createEmailCode() { // 이메일 코드 생성
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i <= 6; i++) {
+			if ((int) (Math.random() * 2) == 0) {
+				buffer.append((char) ((int) (Math.random() * 10) + 48));
+			} else {
+				buffer.append((char) ((int) (Math.random() * 26) + 97));
+			}
+		}
+		return buffer.toString();
+	}
+
+	public boolean isEmailConfirm() { // 이메일 코드가 동일한지 체크
 		boolean emailConfirm = false;
 		inEmailConfirmCode = tfEmailConfirm.getText();
 		emailConfirm = (inEmailConfirmCode.equals(exEmailConfirmCode)) ? true : false;
@@ -437,7 +538,6 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 								: false
 						: false
 				: false : false;
-
 		tfName.getText();
 		tfEmailAccount.getText();
 		tfEmailDomain.getText();
@@ -543,7 +643,10 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 			JOptionPane.showMessageDialog(this, "사용하실 수 있는 아이디입니다.");
 			break;
 		case "확인코드 발송":
-			exEmailConfirmCode = "abcdef";
+			exEmailConfirmCode = createEmailCode(); // 비번 받기
+			String joinEmailAddress = tfEmailAccount.getText() + "@" + tfEmailDomain.getText(); // 이메일 받기
+			sendEmail(new String[] { joinEmailAddress }, "aquavictoria2@gmail.com", tfId.getText(), "선홍유림 카페가입 확인코드 발송",
+					exEmailConfirmCode);// 메일보내기
 			JOptionPane.showMessageDialog(this, "작성하신 이메일로 확인코드를 발송했습니다.");
 			btnEmailConfirm.setEnabled(false);
 			break;
@@ -579,7 +682,33 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 
 				MemberDTO member = new MemberDTO(id, pw, name, emailAccount, emailDomain, tel1, tel2, tel3, birthYear,
 						birthMonth, birthDate, isAgreeEssen, isAgreeSelec);
-				MemberDAO.getInstance().insert(member);
+				member.setStatus(Status.JOIN);
+				Object temp = null;
+				try {
+					login.getOos().writeObject(member);
+					login.getOos().flush();
+
+					while (true) {
+						temp = login.getOis().readObject();
+						if (temp instanceof MemberDTO) {
+							member = (MemberDTO) temp;
+							if (member.getStatus() == Status.JOIN) {
+								JOptionPane.showMessageDialog(this, "회원가입 성공");
+								this.setVisible(false);
+							} else if (member.getStatus() == Status.FAILURE) {
+								JOptionPane.showMessageDialog(this, "회원가입 실패");
+							}
+						} else {
+							return;
+						}
+					}
+				} catch (EOFException eofe) {
+					temp = null;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
 
 			} else {
 				System.out.println(whyImcomplet());
@@ -616,5 +745,3 @@ public class Join extends JFrame implements KeyListener, ActionListener {
 	}
 
 }
-
-

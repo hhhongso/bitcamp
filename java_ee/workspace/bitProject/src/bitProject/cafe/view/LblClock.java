@@ -6,6 +6,10 @@ import java.util.Date;
 import javax.swing.JLabel;
 
 public class LblClock extends JLabel implements Runnable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -10406669327723571L;
 	private Thread clock;
 	private SimpleDateFormat sdf;
 	private Date date;
@@ -31,5 +35,3 @@ public class LblClock extends JLabel implements Runnable {
 		}
 	}
 }
-
-

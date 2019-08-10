@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -33,29 +34,14 @@ public class MyInfomation extends JPanel implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1813802878658133486L;
-	private JTextField tfId;
-	private JPasswordField ptfPwCurr;
-	private JPasswordField ptfPwNew;
-	private JPasswordField ptfPwNewRe;
-	private JTextField tfName;
-	private JTextField tfEmailAccount;
-	private JTextField tfEmailDomain;
-	private JTextField tfTel1;
-	private JTextField tfTel2;
-	private JTextField tfTel3;
-	private JTextField tfYear;
-	private JTextField tfMonth;
-	private JTextField tfDate;
+	private JPasswordField ptfPwCurr, ptfPwNew, ptfPwNewRe;
+	private JTextField tfId, tfName, tfEmailAccount, tfEmailDomain, tfTel1, tfTel2, tfTel3, tfYear, tfMonth, tfDate;
 	private MemberDTO member;
-
 	private JTable tableReservationList;
 	private DefaultTableModel modelRoomList;
 	private Vector<String> vtColName;
 	private Vector<Vector<Integer>> reservationList;
-
-	private JButton btnUpdateReservation;
-	private JButton btnCancel;
-
+	private JButton btnRefresh, btnCancel, btnUpdateStatus, btnLeave, btnCheckPw, btnCheckEmail, btnClear;
 	private JPanel pnlRoomList;
 	private ClientFrame main;
 
@@ -115,40 +101,50 @@ public class MyInfomation extends JPanel implements ActionListener {
 		tfId = new JTextField();
 		tfId.setText(member.getId());
 		tfId.setEditable(false);
-		tfId.setBounds(180, 30, 226, 23);
+		tfId.setBounds(180, 30, 150, 23);
 		pnlStatus.add(tfId);
 		tfId.setColumns(10);
 
 		ptfPwCurr = new JPasswordField();
-		ptfPwCurr.setBounds(180, 85, 226, 21);
+		ptfPwCurr.setBounds(180, 85, 150, 21);
 		pnlStatus.add(ptfPwCurr);
 
 		ptfPwNew = new JPasswordField();
-		ptfPwNew.setBounds(180, 135, 226, 21);
+		ptfPwNew.setBounds(180, 135, 150, 21);
 		pnlStatus.add(ptfPwNew);
 
 		ptfPwNewRe = new JPasswordField();
-		ptfPwNewRe.setBounds(180, 185, 226, 21);
+		ptfPwNewRe.setBounds(180, 185, 150, 21);
 		pnlStatus.add(ptfPwNewRe);
+
+		btnCheckPw = new JButton("확인");
+		btnCheckPw.setBounds(350, 185, 50, 21);
+		btnCheckPw.setFont(new Font("나눔바른고딕", Font.BOLD, 8));
+		pnlStatus.add(btnCheckPw);
 
 		tfName = new JTextField();
 		tfName.setText(member.getName());
 		tfName.setEditable(false);
 		tfName.setColumns(10);
-		tfName.setBounds(180, 235, 226, 23);
+		tfName.setBounds(180, 235, 150, 23);
 		pnlStatus.add(tfName);
 
 		tfEmailAccount = new JTextField();
 		tfEmailAccount.setText(member.getEmailAccount());
 		tfEmailAccount.setColumns(10);
-		tfEmailAccount.setBounds(180, 290, 94, 23);
+		tfEmailAccount.setBounds(180, 290, 70, 23);
 		pnlStatus.add(tfEmailAccount);
 
 		tfEmailDomain = new JTextField();
 		tfEmailDomain.setText(member.getEmailDomain());
 		tfEmailDomain.setColumns(10);
-		tfEmailDomain.setBounds(310, 290, 94, 23);
+		tfEmailDomain.setBounds(270, 290, 75, 23);
 		pnlStatus.add(tfEmailDomain);
+
+		btnCheckEmail = new JButton("인증");
+		btnCheckEmail.setBounds(353, 290, 50, 21);
+		btnCheckEmail.setFont(new Font("나눔바른고딕", Font.BOLD, 8));
+		pnlStatus.add(btnCheckEmail);
 
 		tfTel1 = new JTextField();
 		tfTel1.setText(member.getTel1());
@@ -215,16 +211,20 @@ public class MyInfomation extends JPanel implements ActionListener {
 		pnlStatus.add(label);
 
 		JLabel lblAt = new JLabel("@");
-		lblAt.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
-		lblAt.setBounds(281, 290, 24, 23);
+		lblAt.setFont(new Font("나눔바른고딕", Font.BOLD, 12));
+		lblAt.setBounds(252, 290, 24, 23);
 		pnlStatus.add(lblAt);
 
-		JButton btnUpdateStatus = new JButton("수정");
-		btnUpdateStatus.setBounds(101, 438, 86, 33);
+		btnClear = new JButton("다시입력");
+		btnClear.setBounds(65, 438, 90, 30);
+		pnlStatus.add(btnClear);
+
+		btnUpdateStatus = new JButton("수정");
+		btnUpdateStatus.setBounds(165, 438, 90, 30);
 		pnlStatus.add(btnUpdateStatus);
 
-		JButton btnLeave = new JButton("탈퇴");
-		btnLeave.setBounds(216, 438, 86, 32);
+		btnLeave = new JButton("탈퇴");
+		btnLeave.setBounds(265, 438, 90, 30);
 		pnlStatus.add(btnLeave);
 
 		pnlRoomList = new JPanel();
@@ -232,9 +232,9 @@ public class MyInfomation extends JPanel implements ActionListener {
 		add(pnlRoomList);
 		setTable();
 
-		btnUpdateReservation = new JButton("갱신");
-		btnUpdateReservation.setBounds(467, 430, 163, 60);
-		add(btnUpdateReservation);
+		btnRefresh = new JButton("갱신");
+		btnRefresh.setBounds(467, 430, 163, 60);
+		add(btnRefresh);
 
 		btnCancel = new JButton("예약취소");
 		btnCancel.setEnabled(false);
@@ -245,8 +245,13 @@ public class MyInfomation extends JPanel implements ActionListener {
 	}
 
 	public void addEvent() {
-		btnUpdateReservation.addActionListener(this);
+		btnClear.addActionListener(this);
+		btnRefresh.addActionListener(this);
 		btnCancel.addActionListener(this);
+		btnCheckPw.addActionListener(this);
+		btnUpdateStatus.addActionListener(this);
+		btnLeave.addActionListener(this);
+		btnCheckEmail.addActionListener(this);
 	}
 
 	@SuppressWarnings("serial")
@@ -295,8 +300,7 @@ public class MyInfomation extends JPanel implements ActionListener {
 		RoomDTO room = new RoomDTO(member.getId());
 		room.setStatus(Status.GET_MY_RESERVATION);
 		try {
-			main.getOos().writeObject(room);
-			main.getOos().flush();
+			request(room);
 			while (true) {
 				Object objectReceived = null;
 				try {
@@ -321,9 +325,77 @@ public class MyInfomation extends JPanel implements ActionListener {
 		}
 	}
 
+	public boolean isSamePw(String pw) {
+		boolean result = false;
+		if (pw.equals(member.getPw())) {
+			result = true;
+		}
+		return result;
+	}
+
+	public boolean isSamePw(String pwNew, String pwNewRe) {
+		boolean result = false;
+		if (pwNew.equals(pwNewRe)) {
+			result = true;
+		}
+		return result;
+	}
+
+	public void clear() {
+		tfEmailAccount.setText(member.getEmailAccount());
+		tfEmailDomain.setText(member.getEmailDomain());
+		ptfPwCurr.setText("");
+		ptfPwNew.setText("");
+		ptfPwNewRe.setText("");
+		tfTel1.setText(member.getTel1());
+		tfTel2.setText(member.getTel2());
+		tfTel3.setText(member.getTel3());
+		btnCheckPw.setEnabled(true);
+		ptfPwNew.setEditable(true);
+		ptfPwNewRe.setEditable(true);
+	}
+
+	public void request(MemberDTO member) {
+		try {
+			main.getOos().writeObject(member);
+			main.getOos().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void request(RoomDTO room) {
+		try {
+			main.getOos().writeObject(room);
+			main.getOos().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Object response() {
+		Object objectRecieved = null;
+		while (true) {
+			try {
+				objectRecieved = main.getOis().readObject();
+				break;
+			} catch (EOFException e) {
+				objectRecieved = null;
+				break;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+		return objectRecieved;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnUpdateReservation) { // 갱신
+		if (e.getSource() == btnRefresh) { // 예약리스트 갱신
 			btnCancel.setEnabled(true);
 			for (int i = 0; i < modelRoomList.getRowCount(); i++) {
 				modelRoomList.removeRow(i);
@@ -333,46 +405,88 @@ public class MyInfomation extends JPanel implements ActionListener {
 			for (int i = 0; i < reservationList.size(); i++) {
 				modelRoomList.addRow(reservationList.get(i));
 			}
-		} else if (e.getSource() == btnCancel) {
+		} else if (e.getSource() == btnCancel) { // 예약취소
 			int rowIdx = tableReservationList.getSelectedRow();
 			if (rowIdx == -1) {
 				JOptionPane.showMessageDialog(this, "선택한 예약 리스트가 없습니다.");
 				return;
 			}
+			int year = (Integer) tableReservationList.getValueAt(rowIdx, 0);
+			int month = (Integer) tableReservationList.getValueAt(rowIdx, 1);
+			int date = (Integer) tableReservationList.getValueAt(rowIdx, 2);
+			int inHour = (Integer) tableReservationList.getValueAt(rowIdx, 3);
+			int outHour = (Integer) tableReservationList.getValueAt(rowIdx, 4);
+			int roomNum = (Integer) tableReservationList.getValueAt(rowIdx, 5);
 
-			int roomNum = (Integer) tableReservationList.getValueAt(rowIdx, 0);
-			int year = (Integer) tableReservationList.getValueAt(rowIdx, 1);
-			int month = (Integer) tableReservationList.getValueAt(rowIdx, 2);
-			int date = (Integer) tableReservationList.getValueAt(rowIdx, 3);
-			int inHour = (Integer) tableReservationList.getValueAt(rowIdx, 4);
-			int outHour = (Integer) tableReservationList.getValueAt(rowIdx, 5);
+			RoomDTO room = new RoomDTO(roomNum, member.getId(), year, month, date, inHour, outHour);
+			room.setStatus(Status.CANCEL_MY_RESERVATION);
+			request(room);
 
-			try {
-				RoomDTO room = new RoomDTO(roomNum, member.getId(), year, month, date, inHour, outHour);
-				room.setStatus(Status.CANCEL_MY_RESERVATION);
-				main.getOos().writeObject(room);
-				main.getOos().flush();
-
-				Object objectReceived = null;
-				while (true) {
-					objectReceived = main.getOis().readObject();
-					if (objectReceived instanceof RoomDTO) {
-						room = (RoomDTO) objectReceived;
-						if (room.getStatus() == Status.CANCEL_MY_RESERVATION) {
-							modelRoomList.removeRow(rowIdx);
-							btnCancel.setEnabled(false);
-							return;
-						} else if (room.getStatus() == Status.FAILURE) {
-							System.out.println("예약실패");
-							return;
-						}
-					}
+			Object temp = response();
+			if (temp instanceof RoomDTO) {
+				room = (RoomDTO) temp;
+				if (room.getStatus() == Status.CANCEL_MY_RESERVATION) {
+					modelRoomList.removeRow(rowIdx);
+					btnCancel.setEnabled(false);
+					return;
+				} else if (room.getStatus() == Status.FAILURE) {
+					System.out.println("삭제 실패");
+					return;
 				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
 			}
+		} else if (e.getSource() == btnCheckPw) {
+			String pwNew = String.valueOf(ptfPwNew.getPassword());
+			String pwNewRe = String.valueOf(ptfPwNewRe.getPassword());
+
+			if (pwNew.length() == 0 || pwNewRe.length() == 0) {
+				JOptionPane.showMessageDialog(this, "변경할 비밀번호를 입력해주세요.");
+				return;
+			}
+			if (isSamePw(pwNew, pwNewRe)) {
+				JOptionPane.showMessageDialog(this, "동일한 비밀번호를 입력하셨습니다.");
+				btnCheckPw.setEnabled(false);
+				ptfPwNew.setEditable(false);
+				ptfPwNewRe.setEditable(false);
+			} else {
+				JOptionPane.showMessageDialog(this, "입력하신 비밀번호가 다릅니다.");
+				ptfPwNew.setText("");
+				ptfPwNewRe.setText("");
+			}
+
+		} else if (e.getSource() == btnUpdateStatus) {
+			String id = tfId.getText();
+			String pwCurr = String.valueOf(ptfPwCurr.getPassword());
+			String pwNew = String.valueOf(ptfPwNewRe.getPassword());
+			String emailAccount = tfEmailAccount.getText();
+			String emailDomain = tfEmailDomain.getText();
+			String tel1 = tfTel1.getText();
+			String tel2 = tfTel2.getText();
+			String tel3 = tfTel3.getText();
+
+			// 비밀번호가 맞는지 검사.
+			if (!isSamePw(pwCurr)) {
+				JOptionPane.showMessageDialog(this, "비밀번호가 틀립니다.");
+				return;
+			}
+
+			if (btnCheckPw.isEnabled()) { // 비밀번호는 변경하지 않는경우
+				request(new MemberDTO(id, pwCurr, emailAccount, emailDomain, tel1, tel2, tel3));
+			} else { // 비밀번호까지 변경하는 경우
+				request(new MemberDTO(id, pwNew, emailAccount, emailDomain, tel1, tel2, tel3));
+			}
+			Object temp = response();
+			if (temp instanceof MemberDTO) {
+				MemberDTO memberDTO = (MemberDTO) temp;
+				if (memberDTO.getStatus() == Status.CHANGE_MY_INFO) {
+					JOptionPane.showMessageDialog(this, "성공적으로 수정되었습니다.");
+					clear();
+				} else if (memberDTO.getStatus() == Status.FAILURE) {
+					JOptionPane.showMessageDialog(this, "수정 실패");
+				}
+			}
+
+		} else if (e.getSource() == btnClear) { // 다시 입력
+			clear();
 		}
 	}
 }

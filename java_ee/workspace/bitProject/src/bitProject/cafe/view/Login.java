@@ -16,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -27,7 +28,7 @@ import bitProject.cafe.dto.MemberDTO;
 public class Login extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = -883731442213980503L;
-	private static final String SERVER_IP = "192.168.0.60";
+	private static final String SERVER_IP = "192.168.0.44";
 	private static final int PORT = 10200;
 
 	private JButton btnLogin;
@@ -157,11 +158,12 @@ public class Login extends JFrame implements ActionListener {
 								cf.setVisible(true);
 								this.setVisible(false);
 								break;
-							} else {
-								return;
+							} else if (member.getStatus() == Status.FAILURE) {
+								JOptionPane.showMessageDialog(this, "아이디, 또는 비밀번호가 일치하지 않습니다.");
+								break;
 							}
 						} else {
-							return;
+							break;
 						}
 					} catch (EOFException e1) {
 						temp = null;
@@ -208,4 +210,44 @@ public class Login extends JFrame implements ActionListener {
 	public ObjectOutputStream getOos() {
 		return oos;
 	}
+
+	public void request(MemberDTO member) {
+		try {
+			oos.writeObject(member);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void request(LoginDTO login) {
+		try {
+			oos.writeObject(login);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Object response() {
+		Object objectRecieved = null;
+
+		while (true) {
+			try {
+				objectRecieved = ois.readObject();
+				break;
+			} catch (EOFException e) {
+				objectRecieved = null;
+				break;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+		return objectRecieved;
+	}
+
 }

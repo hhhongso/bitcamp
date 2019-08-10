@@ -3,8 +3,6 @@ package bitProject.cafe.view;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -12,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -61,8 +58,7 @@ public class Order extends JPanel implements ActionListener {
 
 		bevArr = new ImageIcon[] { new ImageIcon("img/coffee_1.png"), new ImageIcon("img/coffee_2.png"),
 				new ImageIcon("img/coffee_3.png"), new ImageIcon("img/coffee_4.png"),
-				new ImageIcon("img/coffee_5.png"),
-				new ImageIcon("img/coffee_6.png"),};
+				new ImageIcon("img/coffee_5.png"), };
 
 		desArr = new ImageIcon[] { new ImageIcon("img/cake_1.png"), new ImageIcon("img/cake_2.png"),
 				new ImageIcon("img/cake_3.png"), new ImageIcon("img/cake_4.png"), };
@@ -72,7 +68,7 @@ public class Order extends JPanel implements ActionListener {
 		taPrice = new JTextArea(0, 0);
 		taPrice.setEditable(false);
 
-		tfAmount = new JTextField("0");
+		tfAmount = new JTextField(0);
 		tfAmount.setColumns(10);
 
 		tfTotPrice = new JTextField();
@@ -111,7 +107,7 @@ public class Order extends JPanel implements ActionListener {
 		lblStatus.setBounds(940, 10, 100, 20);
 		lblTotPrice.setBounds(616, 473, 80, 20);
 		cbxBevOrDes.setBounds(12, 47, 100, 30);
-		cbxMenuSelect.setBounds(200, 47, 100, 30);
+		cbxMenuSelect.setBounds(213, 47, 100, 30);
 		taPrice.setBounds(378, 51, 80, 30);
 		tfAmount.setBounds(505, 51, 80, 30);
 		tfTotPrice.setBounds(708, 468, 100, 30);
@@ -155,18 +151,6 @@ public class Order extends JPanel implements ActionListener {
 		btnAdd.addActionListener(this);
 		btnCancel.addActionListener(this);
 		btnConfirm.addActionListener(this);
-		
-		tfAmount.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				char c = e.getKeyChar();
-				
-				if(!Character.isDigit(c)) {
-					e.consume();
-					return;
-				}
-			}
-		});
 	}// 생성자
 
 	@Override
@@ -190,16 +174,7 @@ public class Order extends JPanel implements ActionListener {
 			taPrice.setEditable(false);
 
 			// 주문 추가 버튼을 누르면, 선택한 메뉴, 수량, 금액을 JTable에 보여준다.
-		} else if (e.getSource() == btnAdd) {		
-			if(Integer.parseInt(tfAmount.getText()) == 0) { 
-				JOptionPane.showMessageDialog(null, "수량을 입력해주세요" );
-				return;
-			} else if(Integer.parseInt(tfAmount.getText()) > 1000) {
-				JOptionPane.showMessageDialog(null, "수량은 1000 잔 까지만 주문이 가능합니다." );
-				return;
-				
-			}
-			
+		} else if (e.getSource() == btnAdd) {
 			String menuName = null;
 			if (cbxBevOrDes.getSelectedIndex() == 0)
 				menuName = setBevName();
@@ -243,7 +218,7 @@ public class Order extends JPanel implements ActionListener {
 			clear();
 			totPrice = 0;
 			tfTotPrice.setText(totPrice + "");
-		} 
+		}
 	}
 
 	public void delete() {
@@ -276,7 +251,7 @@ public class Order extends JPanel implements ActionListener {
 
 	public int setBevPrice(int idx) {
 		int menuPrice = 0;
-		int[] priceArr = { 1000, 2000, 3000, 3000, 2000, 2500};
+		int[] priceArr = { 1000, 2000, 3000, 3000, 2000 };
 		for (int i = 0; i < priceArr.length; i++) {
 			if (idx == i)
 				menuPrice = priceArr[i];
@@ -325,7 +300,7 @@ public class Order extends JPanel implements ActionListener {
 		ImageIcon[] menuArr = setImageIcon(idx); // 선택한 옵션에 맞추어 ImageIcon 를 대입.
 		setCbxMenu(menuArr);
 
-		cbxMenuSelect.setBounds(200, 47, 100, 100);
+		cbxMenuSelect.setBounds(251, 47, 100, 100);
 		add(cbxMenuSelect);
 		cbxMenuSelect.setVisible(true); // ImageIcon을 받은 콤보박스로 setVisible(true)
 	}
@@ -346,4 +321,3 @@ public class Order extends JPanel implements ActionListener {
 	}
 
 }
-

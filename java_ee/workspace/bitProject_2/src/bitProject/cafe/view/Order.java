@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+import bitProject.cafe.dao.OrderDAO;
 import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.OrderDTO;
 
@@ -174,6 +175,7 @@ public class Order extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int totPrice = 0;
+		OrderDAO orderDao = OrderDAO.getInstance();
 		// 음료/디저트 선택 콤보박스에서, 선택한 옵션에 맞추어 메뉴 콤보박스(음료메뉴/디저트메뉴) 를 보여준다.
 		if (e.getSource() == cbxBevOrDes) {
 			selectBevOrDes();
@@ -193,11 +195,12 @@ public class Order extends JPanel implements ActionListener {
 
 			// 주문 추가 버튼을 누르면, 선택한 메뉴, 수량, 금액을 JTable에 보여준다.
 		} else if (e.getSource() == btnAdd) {		
-			if(Integer.parseInt(tfAmount.getText()) == 0) { 
-				JOptionPane.showMessageDialog(null, "수량을 입력해주세요" );
+			if(tfAmount.getText() =="" || tfAmount.getText() == null || Integer.parseInt(tfAmount.getText()) == 0) { 
+				System.out.println(tfAmount.getText());
+				JOptionPane.showMessageDialog(this, "수량을 입력해주세요" );
 				return;
 			} else if(Integer.parseInt(tfAmount.getText()) > 1000) {
-				JOptionPane.showMessageDialog(null, "수량은 1000 잔 까지만 주문이 가능합니다." );
+				JOptionPane.showMessageDialog(this, "수량은 1000 잔 까지만 주문이 가능합니다." );
 				return;
 				
 			}
@@ -208,23 +211,26 @@ public class Order extends JPanel implements ActionListener {
 			else if (cbxBevOrDes.getSelectedIndex() == 1)
 				menuName = setDesName();
 
-			int amount = Integer.parseInt(tfAmount.getText());
-			tfAmount.setText("");
+			int amount = Integer.parseInt(tfAmount.getText().trim());
+			tfAmount.setText("0");
 
 			// DTO를 생성하여 메뉴명, 금액, 수량 set.
-			OrderDTO dto = new OrderDTO();
+			OrderDTO order = new OrderDTO();
 			int menuPrice = Integer.parseInt(taPrice.getText());
-			dto.setId("guest");
-			dto.setMenuName(menuName);
-			dto.setAmount(amount);
-			dto.setMenuPrice(menuPrice);
-			list.add(dto);
+			order.setId("guest");
+			order.setMenuName(menuName);
+			order.setAmount(amount);
+			order.setMenuPrice(menuPrice);			
+			
+			int seq = orderDao.getSeq();
+			order.setSeq(seq);
+			list.add(order);
 
 			// JTable에는 열 별로 vector로 추가한다.
 			Vector<Object> vec = new Vector<Object>();
-			vec.addElement(dto.getMenuName());
-			vec.addElement(dto.getAmount());
-			vec.addElement(dto.getMenuPrice());
+			vec.addElement(order.getMenuName());
+			vec.addElement(order.getAmount());
+			vec.addElement(order.getMenuPrice());
 			model.addRow(vec);
 
 			// 총 결제 금액
@@ -243,12 +249,24 @@ public class Order extends JPanel implements ActionListener {
 			// 주문 확정 버튼을 누르면, 체크되어 있던 값이 모두 초기화된다.
 		} else if (e.getSource() == btnConfirm) {
 			clear();
+			JOptionPane.showMessageDialog(this, "주문이 완료되었습니다. ");
 			totPrice = 0;
 			tfTotPrice.setText(totPrice + "");
-		} 
+
+			int cnt = 0; 
+			// DB에 orderDTO order 를 보낸다.
+			for (OrderDTO order : list) {
+				cnt = orderDao.insert(order);
+			}
+			System.out.println(cnt + "건의 주문 내역 추가");
+		}
 	}
 
 	public void delete() {
+		if(table.getSelectedColumn() == -1) {
+			JOptionPane.showMessageDialog(null, "주문 취소할 메뉴를 선택해 주세요." );
+			return;
+		}
 		int row = table.getSelectedRow();
 		model.removeRow(row);
 		list.remove(row);

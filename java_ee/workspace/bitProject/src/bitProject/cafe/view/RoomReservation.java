@@ -332,6 +332,7 @@ public class RoomReservation extends JPanel implements ActionListener {
 		}
 
 		if (e.getSource() == cbxYear) { // 년도에 변화가 있을 때.
+			allRoomClose();
 			if (currYear == selectedYear) {
 				cbxMonth.removeAllItems();
 				for (int i = currMonth + 1; i <= 12; i++) {
@@ -346,6 +347,7 @@ public class RoomReservation extends JPanel implements ActionListener {
 			cbxMonth.setSelectedIndex(0);
 			selectedMonth = Integer.parseInt("" + cbxMonth.getSelectedItem()) - 1;
 		} else if (e.getSource() == cbxMonth) { // 월에 변화가 있을 때.
+			allRoomClose();
 			if (currYear == selectedYear && currMonth == selectedMonth) {
 				cbxDate.removeAllItems();
 				cal.set(selectedYear, currMonth, 1);
@@ -364,6 +366,7 @@ public class RoomReservation extends JPanel implements ActionListener {
 			cbxDate.setSelectedIndex(0);
 			selectedDate = Integer.parseInt("" + cbxDate.getSelectedItem());
 		} else if (e.getSource() == cbxDate) { // 일에 변화가 있을 때
+			allRoomClose();
 			if (currYear == selectedYear && currMonth == selectedMonth && currDate == selectedDate) {
 				cbxInHour.removeAllItems();
 				cbxOutHour.removeAllItems();
@@ -382,6 +385,7 @@ public class RoomReservation extends JPanel implements ActionListener {
 			cbxInHour.setSelectedIndex(0);
 			selectedInHour = Integer.parseInt("" + cbxInHour.getSelectedItem());
 		} else if (e.getSource() == cbxInHour) { // 시작 시간에 변화가 있을 때
+			allRoomClose();
 			cbxOutHour.removeAllItems();
 			for (int i = selectedInHour + 1; i <= 23; i++) {
 				cbxOutHour.addItem(i + "");
@@ -468,7 +472,6 @@ public class RoomReservation extends JPanel implements ActionListener {
 					selectedInHour, selectedOutHour);
 			room.setStatus(Status.CHECK_MY_RESERVATION);
 			sendMessageToServer(room);
-
 			while (true) {
 				try {
 					Object objectRecieved = main.getOis().readObject();
@@ -483,11 +486,13 @@ public class RoomReservation extends JPanel implements ActionListener {
 									btnRoomArr[i].setText("예약가능");
 								}
 							} else {
+								for (int i = 0; i < btnRoomArr.length; i++) {
+									btnRoomArr[i].setEnabled(true);
+									btnRoomArr[i].setText("예약가능");
+								}
+
 								for (RoomDTO roomDTO : roomList) {
-									for (int i = 0; i < btnRoomArr.length; i++) {
-										btnRoomArr[i].setEnabled(true);
-										btnRoomArr[i].setText("예약가능");
-									}
+									System.out.println(roomDTO.getRoomNum() + "방");
 									if (selectedInHour < roomDTO.getOutHour()
 											&& selectedInHour >= roomDTO.getInHour()) {
 										// 선택한 inHour가 room에서 가져온 값 사이에 있을 때
@@ -500,7 +505,7 @@ public class RoomReservation extends JPanel implements ActionListener {
 										btnRoomArr[roomDTO.getRoomNum() - 1].setEnabled(false);
 										btnRoomArr[roomDTO.getRoomNum() - 1].setText("예약불가");
 									}
-									if (selectedInHour < roomDTO.getOutHour()
+									if (selectedInHour <= roomDTO.getInHour()
 											&& selectedOutHour >= roomDTO.getOutHour()) {
 										// 선택한 inHour ~ outHour 가 room의 in/out을 감싸고 있을 때.
 										btnRoomArr[roomDTO.getRoomNum() - 1].setEnabled(false);
@@ -528,6 +533,14 @@ public class RoomReservation extends JPanel implements ActionListener {
 			main.getOos().flush();
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		}
+	}
+
+	public void allRoomClose() {
+		for (int i = 0; i < btnRoomArr.length; i++) {
+			btnRoomArr[i].setEnabled(false);
+			btnRoomArr[i].setText("예약불가");
+			btnRoomArr[i].setBackground(Color.WHITE);
 		}
 	}
 

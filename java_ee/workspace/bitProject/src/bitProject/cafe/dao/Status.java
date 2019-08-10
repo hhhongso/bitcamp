@@ -1,8 +1,8 @@
 package bitProject.cafe.dao;
 
 public enum Status {
-	// 로그인, 로그아웃, 회원가입
-	LOGIN, LOGOUT, JOIN, CHECK_MY_ID,
+	// 로그인, 로그아웃, 회원가입, 개인정보 수정
+	LOGIN, LOGOUT, JOIN, CHECK_MY_ID, CHANGE_MY_INFO, SEND_EMAIL,
 	
 	// 예약처리에 관한 메시지
 	RESERVATION, CHECK_MY_RESERVATION, GET_MY_RESERVATION, CANCEL_MY_RESERVATION,

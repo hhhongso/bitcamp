@@ -9,6 +9,8 @@ public class LoginDTO implements Serializable {
 	private static final long serialVersionUID = -3398789852219044576L;
 	private String id;
 	private String pw;
+	private String emailAccount;
+	private String emailDomain;
 	private Status status;
 
 	public LoginDTO(String id, Status status) {
@@ -21,6 +23,20 @@ public class LoginDTO implements Serializable {
 		this.id = id;
 		this.pw = pw;
 		this.status = status;
+	}
+
+	public LoginDTO(String emailAccount, String emailDomain) {
+		this.emailAccount = emailAccount;
+		this.emailDomain = emailDomain;
+		status = Status.SEND_EMAIL;
+	}
+
+	public String getEmailAccount() {
+		return emailAccount;
+	}
+
+	public String getEmailDomain() {
+		return emailDomain;
 	}
 
 	public String getId() {

@@ -4,21 +4,22 @@ import java.io.Serializable;
 import bitProject.cafe.view.Message;
 
 public class OrderDTO implements Serializable {
+	private int seq;
+	
+
 	private String id;
 	private String menuName;
 	private int amount;
 	private int menuPrice;
-	private int totPrice;
-	private Message status;
-	private MemberDTO member;
-	private boolean isStaff;
 	private String orderDate;
 
-	
-	public OrderDTO() {
-		this.member = member;
+	public int getSeq() {
+		return seq;
 	}
 
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -48,30 +49,6 @@ public class OrderDTO implements Serializable {
 
 	public void setMenuPrice(int menuPrice) {
 		this.menuPrice = menuPrice;
-	}
-
-	public void setStatus(Message status) {
-		this.status = status;
-	}
-
-	public Message getStatus() {
-		return status;
-	}
-	
-	public void setStaff(boolean isStaff) {
-		this.isStaff = isStaff;
-	}
-	
-	public boolean getStaff() {
-		return isStaff;
-	}
-
-	public int getTotPrice() {
-		return totPrice;
-	}
-
-	public void setTotPrice(int totPrice) {
-		this.totPrice = totPrice;
 	}
 
 	public void setOrderDate(String orderDate) {

@@ -7,6 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
+
+import bitProject.cafe.dto.BoardDTO;
 
 public class BoardDAO {
 	private static BoardDAO instance;
@@ -18,7 +21,6 @@ public class BoardDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 
-	// singleton과 인스턴스 획득용
 	public static BoardDAO getInstance() {
 		if (instance == null) {
 			synchronized (BoardDAO.class) {
@@ -28,18 +30,14 @@ public class BoardDAO {
 		return instance;
 	}
 
-	// 생성자 - 드라이버 불러오기
 	public BoardDAO() {
 		try {
 			Class.forName(driver);
-			System.out.println("Driver Loading Success");
-
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	// 서버연결
 	public void getConnection() {
 		try {
 			conn = DriverManager.getConnection(url, user, password);
@@ -47,6 +45,90 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 	}
+
+	public BoardDTO writeBoard(BoardDTO board) {
+		getConnection();
+		String sql = "INSERT INTO CAFE_BOARD VALUES(SEQ_CAFE_BOARD.nextVal, ?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getId());
+			pstmt.setString(2, board.getText());
+			pstmt.setString(3, board.getWriteTime());
+
+			int cnt = pstmt.executeUpdate();
+			if (cnt != 0) {
+				sql = "SELECT SEQ_CAFE_BOARD.CURRVAL AS SEQ FROM DUAL";
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					board.setSeq(rs.getInt("SEQ"));
+				}
+			} else {
+				board = null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnect(false);
+		}
+		return board;
+	}
+
+	public Vector<Vector<String>> getAllBoardContents() {
+		Vector<Vector<String>> boardList = new Vector<Vector<String>>();
+		Vector<String> board = null;
+		getConnection();
+		String sql = "SELECT * FROM CAFE_BOARD ORDER BY BOARD_SEQ DESC, BOARD_DATE DESC";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				board = new Vector<String>();
+				board.add("" + rs.getInt("BOARD_SEQ"));
+				board.add(rs.getString("id"));
+				board.add(rs.getString("BOARD_TEXT"));
+				board.add(rs.getString("BOARD_DATE"));
+				boardList.add(board);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnect(true);
+		}
+		return boardList;
+	}
+
+	public int deleteBoard(BoardDTO board) {
+		int cnt = 0;
+		getConnection();
+		String sql = "DELETE FROM CAFE_BOARD WHERE BOARD_SEQ = ? AND ID = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getSeq());
+			pstmt.setString(2, board.getId());
+			cnt = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnect(false);
+		}
+		return cnt;
+	}
+
+	public void disconnect(boolean isSelect) {
+		try {
+			if (isSelect) {
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} else {
+				pstmt.close();
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
-
-

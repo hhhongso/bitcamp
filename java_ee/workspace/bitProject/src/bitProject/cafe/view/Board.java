@@ -101,7 +101,14 @@ public class Board extends JPanel implements ActionListener {
 		tableBoardList.setRowSelectionAllowed(true);
 		tableBoardList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableBoardList.setShowVerticalLines(false);
+		tableBoardList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableBoardList.getTableHeader().setReorderingAllowed(false);
+		tableBoardList.setShowVerticalLines(false);
+		tableBoardList.setRowHeight(25);
+		tableBoardList.getColumn("글번호").setPreferredWidth(50);
+		tableBoardList.getColumn("내용").setPreferredWidth(800);
+		tableBoardList.getColumn("작성자").setPreferredWidth(130);
+		tableBoardList.getColumn("작성일").setPreferredWidth(200);
 		setAlignmentCenter(tableBoardList);
 
 		scroll = new JScrollPane(tableBoardList);
@@ -113,8 +120,8 @@ public class Board extends JPanel implements ActionListener {
 		// Vector로 열 데이터 입력
 		vtColName = new Vector<String>();
 		vtColName.addElement("글번호");
-		vtColName.addElement("내용");
 		vtColName.addElement("작성자");
+		vtColName.addElement("내용");
 		vtColName.addElement("작성일");
 	}
 
@@ -157,7 +164,6 @@ public class Board extends JPanel implements ActionListener {
 			new BoardDialog(main, this);
 
 		} else if (e.getSource() == btnDelete) {
-			// 선택한 곳의 시퀀스넘버를 받아오자.
 			int rowIdx = tableBoardList.getSelectedRow();
 			if (rowIdx == -1) {
 				JOptionPane.showMessageDialog(this, "삭제할 게시글을 선택해주세요.");
@@ -165,6 +171,10 @@ public class Board extends JPanel implements ActionListener {
 			}
 			int seq = Integer.parseInt(tableBoardList.getValueAt(rowIdx, 0) + "");
 			String id = (String) tableBoardList.getValueAt(rowIdx, 1);
+			if (!member.getId().equals(id)) {
+				JOptionPane.showMessageDialog(this, "자신이 작성한 글만 삭제 가능합니다.");
+				return;
+			}
 			String text = (String) tableBoardList.getValueAt(rowIdx, 2);
 			String writeTime = (String) tableBoardList.getValueAt(rowIdx, 3);
 			BoardDTO boardDTO = new BoardDTO(id, text, writeTime);

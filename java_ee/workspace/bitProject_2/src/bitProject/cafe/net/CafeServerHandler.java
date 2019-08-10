@@ -60,11 +60,11 @@ public class CafeServerHandler extends Thread {
 				} else if (temp instanceof OrderDTO || temp instanceof MemberDTO) {
 					OrderDTO order = (OrderDTO) temp;
 
-					if (order.getStatus() == Message.ORDER) {
-						order.setStatus(Message.ORDER);
-						oos.writeObject(order);
-						oos.flush();
-					} 
+//					if (order.getStatus() == Message.ORDER) {
+//						order.setStatus(Message.ORDER);
+//						oos.writeObject(order);
+//						oos.flush();
+//					} 
 
 					// 스태프 계정에게는 내용을 보내주고
 					// 관계없는 사용자 계정에게는 아무것도 보내지 않는다.

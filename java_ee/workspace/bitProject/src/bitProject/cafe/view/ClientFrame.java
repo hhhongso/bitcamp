@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 
 public class ClientFrame extends JFrame implements ActionListener, Runnable {
@@ -137,6 +138,7 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 
 		btnPrev.addActionListener(this);
 		btnNext.addActionListener(this);
+		btnLogOut.addActionListener(this);
 		// 서버 연결하고, 카드레이아웃에 모든 패널을 붙임.
 		connectToServer();
 		addCardPanels();
@@ -147,8 +149,7 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 			public void windowClosing(WindowEvent e) {
 				Object temp = null;
 				try {
-					oos.writeObject(new MemberDTO(member.getName(), Status.LOGOUT));
-					oos.flush();
+					request(new MemberDTO(member.getName(), Status.LOGOUT));
 					while (true) {
 						temp = ois.readObject();
 						if (temp instanceof MemberDTO) {
@@ -178,7 +179,7 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 	public void connectToServer() {
 		String serverIP = null;
 		try {
-			serverIP = "192.168.0.60";
+			serverIP = "192.168.0.44";
 			socket = new Socket(serverIP, 10200);
 
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -245,28 +246,34 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 			card.show(pnlMenuWrap, "order");
 		} else if (e.getSource() == btnMenuArr[3]) {
 			System.out.println("아직 갖추어지지 않음");
-
 		} else if (e.getSource() == btnMenuArr[4]) {
 			card.next(pnlMenuWrap);
 			card.show(pnlMenuWrap, "myInfomation");
+		} else if (e.getSource() == btnLogOut) {
+			request(new LoginDTO(member.getName(), Status.LOGOUT));
+			Object temp = response();
+			if (temp instanceof LoginDTO) {
+				LoginDTO login = (LoginDTO) temp;
+				if (login.getStatus() == Status.LOGOUT) {
+					try {
+						oos.close();
+						ois.close();
+						socket.close();
+						new Login();
+						this.dispose();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 
 	@Override
 	public void run() {
-		try {
-			oos.writeObject(member);
-			oos.flush();
-			while (true) {
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				oos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		request(member);
+		while (true) {
+
 		}
 	}
 
@@ -276,6 +283,44 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 
 	public ObjectOutputStream getOos() {
 		return oos;
+	}
+
+	public void request(LoginDTO login) {
+		try {
+			oos.writeObject(login);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void request(MemberDTO member) {
+		try {
+			oos.writeObject(member);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Object response() {
+		Object objectRecieved = null;
+		while (true) {
+			try {
+				objectRecieved = ois.readObject();
+				break;
+			} catch (EOFException e) {
+				objectRecieved = null;
+				break;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				break;
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+		return objectRecieved;
 	}
 
 //	public static void main(String[] args) {

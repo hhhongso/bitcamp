@@ -74,14 +74,33 @@ public class RoomDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			disconnection(false);
 		}
 		return cnt;
+	}
+
+	public boolean hasSameReservation(RoomDTO room) {
+		boolean result = false;
+		getConnection();
+		String sql = "SELECT FROM CAFE_ROOMRESERVATION WHERE ROOM_NUM = ? AND ROOM_YEAR = ? AND ROOM_MONTH = ? AND ROOM_DATE = ? AND INHOUR = ? AND OUTHOUR = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, room.getRoomNum());
+			pstmt.setInt(2, room.getYear());
+			pstmt.setInt(3, room.getMonth());
+			pstmt.setInt(4, room.getDate());
+			pstmt.setInt(5, room.getInHour());
+			pstmt.setInt(6, room.getOutHour());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnection(true);
+		}
+		return result;
 	}
 
 	public ArrayList<RoomDTO> check(RoomDTO room) {
@@ -116,13 +135,7 @@ public class RoomDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rs.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			disconnection(true);
 		}
 		return roomList;
 	}
@@ -131,7 +144,7 @@ public class RoomDAO {
 		Vector<Vector<Integer>> roomList = new Vector<Vector<Integer>>();
 		Vector<Integer> room = null;
 		getConnection();
-		String sql = "SELECT * FROM CAFE_ROOMRESERVATION WHERE ID = ? ORDER BY 2, 3, 4, 5, 6";
+		String sql = "SELECT * FROM CAFE_ROOMRESERVATION WHERE ID = ? ORDER BY room_year, room_month, room_date, inhour, outHour";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
@@ -139,29 +152,23 @@ public class RoomDAO {
 
 			while (rs.next()) {
 				room = new Vector<Integer>();
-				room.add(rs.getInt("room_num"));
 				room.add(rs.getInt("room_year"));
 				room.add(rs.getInt("room_month"));
 				room.add(rs.getInt("room_date"));
 				room.add(rs.getInt("inhour"));
 				room.add(rs.getInt("outHour"));
+				room.add(rs.getInt("room_num"));
 				roomList.add(room);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				rs.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			disconnection(true);
 		}
 		return roomList;
 	}
 
-	public int deleteReservation(RoomDTO room) {
+	public int cancelReservation(RoomDTO room) {
 		int cnt = 0;
 		getConnection();
 		String sql = "DELETE FROM CAFE_ROOMRESERVATION WHERE ID = ? AND ROOM_NUM = ? AND ROOM_YEAR = ? AND ROOM_MONTH = ? AND ROOM_DATE = ? AND INHOUR = ? AND OUTHOUR =?";
@@ -176,11 +183,24 @@ public class RoomDAO {
 			pstmt.setInt(7, room.getOutHour());
 
 			cnt = pstmt.executeUpdate();
+			System.out.println(cnt);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			disconnection(false);
 		}
 		return cnt;
 	}
+
+	public void disconnection(boolean isSelect) {
+		try {
+			if (isSelect) {
+				rs.close();
+			}
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
-
-

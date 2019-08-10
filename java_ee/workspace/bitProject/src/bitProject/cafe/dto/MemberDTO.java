@@ -21,13 +21,10 @@ public class MemberDTO implements Serializable {
 	private int birthMonth;
 	private int birthDate;
 	private boolean isStaff;
-	private boolean isAgreeEssen;
-	private boolean isAgreeSelec;
 	private Status status;
 
 	public MemberDTO(String id, String pw, String name, String emailAccount, String emailDomain, String tel1,
-			String tel2, String tel3, int birthYear, int birthMonth, int birthDate, boolean isAgreeEssen,
-			boolean isAgreeSelec) {
+			String tel2, String tel3, int birthYear, int birthMonth, int birthDate) {
 		super();
 		this.id = id;
 		this.pw = pw;
@@ -41,14 +38,25 @@ public class MemberDTO implements Serializable {
 		this.birthMonth = birthMonth;
 		this.birthDate = birthDate;
 		isStaff = false;
-		this.isAgreeEssen = isAgreeEssen;
-		this.isAgreeSelec = isAgreeSelec;
 		status = Status.LOGIN;
 	}
 
 	public MemberDTO(String name, Status status) {
 		this.name = name;
 		this.status = status;
+	}
+
+	public MemberDTO(String id, String pw, String emailAccount, String emailDomain, String tel1, String tel2,
+			String tel3) {
+		this.id = id;
+		this.pw = pw;
+		this.emailAccount = emailAccount;
+		this.emailDomain = emailDomain;
+		this.tel1 = tel1;
+		this.tel2 = tel2;
+		this.tel3 = tel3;
+		isStaff = false;
+		status = Status.CHANGE_MY_INFO;
 	}
 
 	public Status getStatus() {
@@ -153,21 +161,5 @@ public class MemberDTO implements Serializable {
 
 	public void setStaff(boolean isStaff) {
 		this.isStaff = isStaff;
-	}
-
-	public boolean isAgreeEssen() {
-		return isAgreeEssen;
-	}
-
-	public void setAgreeEssen(boolean isAgreeEssen) {
-		this.isAgreeEssen = isAgreeEssen;
-	}
-
-	public boolean isAgreeSelec() {
-		return isAgreeSelec;
-	}
-
-	public void setAgreeSelec(boolean isAgreeSelec) {
-		this.isAgreeSelec = isAgreeSelec;
 	}
 }

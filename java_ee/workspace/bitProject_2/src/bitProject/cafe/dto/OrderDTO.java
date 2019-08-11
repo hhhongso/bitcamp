@@ -5,8 +5,6 @@ import bitProject.cafe.view.Message;
 
 public class OrderDTO implements Serializable {
 	private int seq;
-	
-
 	private String id;
 	private String menuName;
 	private int amount;

@@ -4,15 +4,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -25,13 +22,9 @@ import javax.swing.table.TableColumnModel;
 
 import bitProject.cafe.dao.OrderDAO;
 import bitProject.cafe.dao.SalesDAO;
-import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.OrderDTO;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 public class SalesDisp extends JPanel implements ActionListener {
@@ -44,13 +37,14 @@ public class SalesDisp extends JPanel implements ActionListener {
 
 	public SalesDisp() {
 		setLayout(null);
+		setBounds(new Rectangle(0, 0, 1200, 500));
 
 		JLabel lblOrderDisp = new JLabel("매출 확인");
 		lblOrderDisp.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		lblOrderDisp.setBounds(28, 21, 178, 36);
 		add(lblOrderDisp);
 
-		String[] colName = {"주문 메뉴 ", "수량(시간)", "단가", "금액", "주문날짜" };
+		String[] colName = {"번호", "주문 메뉴 ", "수량(시간)", "단가", "금액", "등록 시간"};
 		model = new DefaultTableModel(colName, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -89,9 +83,19 @@ public class SalesDisp extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnUpdate) {
-				
-		} 
+		if (e.getSource() == btnUpdate) { // 매출내역 갱신
+			if(model.getRowCount() != 0) {
+				int lastSeq = (int) table.getValueAt(model.getRowCount()-1, 0);
+				list = SalesDAO.getInstance().dispUpdate(lastSeq);	
+				if(list.size() == 0) {
+					JOptionPane.showMessageDialog(this, "갱신할 내용이 없습니다. ");
+				}
+					disp();
+			} else if(model.getRowCount() == 0) {
+				list = OrderDAO.getInstance().dispAll();	
+				disp();
+			}
+		} 		 
 	}
 	
 	public void disp() {

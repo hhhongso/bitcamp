@@ -7,14 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -26,13 +21,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import bitProject.cafe.dao.OrderDAO;
-import bitProject.cafe.dto.MemberDTO;
+import bitProject.cafe.dao.SalesDAO;
 import bitProject.cafe.dto.OrderDTO;
 
-import javax.swing.ButtonGroup;
+
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 public class OrderDisp extends JPanel implements ActionListener {
@@ -46,13 +39,14 @@ public class OrderDisp extends JPanel implements ActionListener {
 
 	public OrderDisp() {
 		setLayout(null);
+		setBounds(new Rectangle(0, 0, 1200, 500));
 
 		JLabel lblOrderDisp = new JLabel("주문내역 확인");
 		lblOrderDisp.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		lblOrderDisp.setBounds(28, 21, 178, 36);
 		add(lblOrderDisp);
 
-		String[] colName = {"주문번호", "주문자", "주문 메뉴", "수량", "단가", "금액"};
+		String[] colName = {"번호", "주문자", "주문 메뉴", "수량", "단가", "금액"};
 		model = new DefaultTableModel(colName, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -98,24 +92,36 @@ public class OrderDisp extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnConfirm) {
+		if(e.getSource() == btnConfirm) { // 판매 완료
 			int row = table.getSelectedRow();
 			if(!table.isRowSelected(row)) {
 				JOptionPane.showMessageDialog(this, "판매 완료된 메뉴를 선택해 주세요 !");
 				
 			}else if(table.isRowSelected(row)) {
 				int selectedSeq = (int) table.getValueAt(row, 0);
+				int cntSales = SalesDAO.getInstance().insert(list.get(row));
+				System.out.println(cntSales + "건 매출 등록 완료");
+
+				int cntOrder = OrderDAO.getInstance().delete(selectedSeq);
+				System.out.println(cntOrder + "건 주문 정보 삭제 완료");				
 				model.removeRow(row);
-				int cnt = OrderDAO.getInstance().delete(selectedSeq);
-				System.out.println(cnt + "건 주문 정보 삭제 완료");
+				
+//				list.remove(row);				
 			}
 		
-		}else if (e.getSource() == btnUpdate) {
-			System.out.println(model.getRowCount());
-			int lastSeq = (int) table.getValueAt(model.getRowCount(), 0);
-			System.out.println(lastSeq);
-			list = OrderDAO.getInstance().dispUpdate(lastSeq);	
-			disp();
+		} else if (e.getSource() == btnUpdate) { //주문내역 갱신 
+			if(model.getRowCount() != 0) {
+				int lastSeq = (int) table.getValueAt(model.getRowCount()-1, 0);
+				list = OrderDAO.getInstance().dispUpdate(lastSeq);	
+				if(list.size() == 0) {
+					JOptionPane.showMessageDialog(this, "갱신할 내용이 없습니다. ");
+				}
+				disp();
+			} else if(model.getRowCount() == 0) {
+				list = OrderDAO.getInstance().dispAll();	
+				disp();
+				
+			}
 				
 		} 
 	}

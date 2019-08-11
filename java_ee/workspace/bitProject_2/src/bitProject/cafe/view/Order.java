@@ -1,12 +1,14 @@
 package bitProject.cafe.view;
 
 import java.awt.Font;
-import java.awt.HeadlessException;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -20,10 +22,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import bitProject.cafe.dao.OrderDAO;
-import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.OrderDTO;
 
 public class Order extends JPanel implements ActionListener {
@@ -48,8 +52,9 @@ public class Order extends JPanel implements ActionListener {
 	private DefaultTableModel model; // tableModel
 	private ArrayList<OrderDTO> list; // dto ArrayList
 
-	public Order(MainFrame mf, MemberDTO member) {
+	public Order() {
 		setLayout(null);
+		setBounds(new Rectangle(0, 0, 1200, 500));
 
 		JLabel lblBevOrDes = new JLabel("음료/디저트");
 		JLabel lblMenuSelect = new JLabel("메뉴 선택");
@@ -100,6 +105,7 @@ public class Order extends JPanel implements ActionListener {
 			}
 		};
 		table = new JTable(model);
+		setAlignmentCenter(table);
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -175,6 +181,7 @@ public class Order extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int totPrice = 0;
+	
 		OrderDAO orderDao = OrderDAO.getInstance();
 		// 음료/디저트 선택 콤보박스에서, 선택한 옵션에 맞추어 메뉴 콤보박스(음료메뉴/디저트메뉴) 를 보여준다.
 		if (e.getSource() == cbxBevOrDes) {
@@ -195,7 +202,7 @@ public class Order extends JPanel implements ActionListener {
 
 			// 주문 추가 버튼을 누르면, 선택한 메뉴, 수량, 금액을 JTable에 보여준다.
 		} else if (e.getSource() == btnAdd) {		
-			if(tfAmount.getText() =="" || tfAmount.getText() == null || Integer.parseInt(tfAmount.getText()) == 0) { 
+			if(tfAmount.getText().equals("") || tfAmount.getText() == null || Integer.parseInt(tfAmount.getText()) == 0) { 
 				System.out.println(tfAmount.getText());
 				JOptionPane.showMessageDialog(this, "수량을 입력해주세요" );
 				return;
@@ -220,7 +227,7 @@ public class Order extends JPanel implements ActionListener {
 			order.setId("guest");
 			order.setMenuName(menuName);
 			order.setAmount(amount);
-			order.setMenuPrice(menuPrice);			
+			order.setMenuPrice(menuPrice);	
 			
 			int seq = orderDao.getSeq();
 			order.setSeq(seq);
@@ -252,12 +259,13 @@ public class Order extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(this, "주문이 완료되었습니다. ");
 			totPrice = 0;
 			tfTotPrice.setText(totPrice + "");
-
+			
 			int cnt = 0; 
 			// DB에 orderDTO order 를 보낸다.
-			for (OrderDTO order : list) {
-				cnt = orderDao.insert(order);
+			for (OrderDTO dto1 : list) {
+				cnt = orderDao.insert(dto1);
 			}
+			list.removeAll(list); // 주문확정 되면, arraylist를 모두 비운다. 
 			System.out.println(cnt + "건의 주문 내역 추가");
 		}
 	}
@@ -365,4 +373,12 @@ public class Order extends JPanel implements ActionListener {
 		return menuArr;
 	}
 
+	public void setAlignmentCenter(JTable table) { // JTable의 내용 가운데 정렬
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+		dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel tcm = table.getColumnModel();
+		for (int i = 0; i < tcm.getColumnCount(); i++) {
+			tcm.getColumn(i).setCellRenderer(dtcr);
+		}
+	}
 }

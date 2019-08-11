@@ -172,7 +172,7 @@ public class MainFrame extends JFrame implements ActionListener, Runnable {
 		roomReservation = new RoomReservation(member, ois, oos);
 		board = new Board(member);
 		
-		order = new Order(this, member);
+		order = new Order();
 
 		pnlMenuWrap.add(board, "board");
 		pnlMenuWrap.add(roomReservation, "roomReservation");

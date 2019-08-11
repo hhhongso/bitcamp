@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import bitProject.cafe.dto.OrderDTO;
 
@@ -116,7 +118,7 @@ public class OrderDAO {
 		getConnection();
 		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 
-		String sql = "SELECT * FROM CAFE_ORDER";
+		String sql = "SELECT * FROM CAFE_ORDER order by 1 asc";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -153,15 +155,14 @@ public class OrderDAO {
 		return list;
 	}
 	
-	public int delete(int selectedSeq) {
+	public int delete(int selectedSeq) {//판매완료 ->  주문 내역 DB에서 삭제
 		getConnection();
 		int cnt = 0; 
 		String sql = "DELETE FROM CAFE_ORDER WHERE SEQ = ? ";
-		int seq = selectedSeq;
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, seq);
+			pstmt.setInt(1, selectedSeq);
 			cnt = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -178,16 +179,18 @@ public class OrderDAO {
 
 	public ArrayList<OrderDTO> dispUpdate(int lastSeq) {
 		getConnection();
-		ArrayList<OrderDTO> list = null;
+		ArrayList<OrderDTO> list = new ArrayList<OrderDTO>();
 		
-		String sql = "SELECT * FROM CAFE_ORDER WHERE SEQ > ?";
+		String sql = "SELECT * FROM CAFE_ORDER WHERE SEQ > ? order by 1 asc";
+		
 		try {
-			pstmt.setInt(1, lastSeq);
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, lastSeq);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				OrderDTO order = new OrderDTO();			
+				OrderDTO order = new OrderDTO();	
+				
 				int seq = rs.getInt("seq");
 				String id = rs.getString("id");
 				String menuName = rs.getString("menuName");

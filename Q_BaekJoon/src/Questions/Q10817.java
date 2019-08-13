@@ -26,6 +26,7 @@ import java.util.Scanner;
 
 public class Q10817 {
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int A = scan.nextInt();
 		int B = scan.nextInt();

@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Q10950 {
 
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int T = scan.nextInt();
 		

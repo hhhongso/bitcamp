@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Q10818 {
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int N = scan.nextInt();
 		int max = 0; 

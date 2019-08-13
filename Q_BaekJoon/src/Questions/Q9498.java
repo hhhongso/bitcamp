@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Q9498 {
 
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int score = scan.nextInt();
 		if(score >= 90 && score <= 100) {

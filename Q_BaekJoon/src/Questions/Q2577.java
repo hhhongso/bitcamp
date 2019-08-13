@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Q2577 {
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int A = scan.nextInt();		int B = scan.nextInt();		int C = scan.nextInt();
 		char[] num = new char[10]; // 0 1 2 3 4 5 6 7 8 9

@@ -1,7 +1,6 @@
 package Questions;
 
 import java.util.Scanner;
-import java.util.function.IntBinaryOperator;
 
 public class Q10817Ram {
 	

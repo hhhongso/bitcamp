@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Q11022 {
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		int T = scan.nextInt();
 		for (int i = 1; i <= T; i++) {

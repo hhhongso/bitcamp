@@ -1,4 +1,4 @@
-package Problems;
+package Questions;
 
 import java.util.Scanner;
 import java.util.function.IntBinaryOperator;
@@ -19,8 +19,8 @@ public class Q10817Ram {
 	
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);		
-		int result = gugudan((x) -> x = scan.nextInt()	
-				return result);
+//		int result = gugudan((x) -> x = scan.nextInt()	
+//				return result);
 		 
 		 
 		

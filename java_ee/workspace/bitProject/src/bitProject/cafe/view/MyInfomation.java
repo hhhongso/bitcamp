@@ -2,12 +2,9 @@ package bitProject.cafe.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
-import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -24,28 +21,28 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import bitProject.cafe.Setting;
 import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 import bitProject.cafe.dto.RoomDTO;
+import bitProject.cafe.dto.SalesDTO;
 
 public class MyInfomation extends JPanel implements ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1813802878658133486L;
 	private JPasswordField ptfPwCurr, ptfPwNew, ptfPwNewRe;
 	private JTextField tfId, tfName, tfEmailAccount, tfEmailDomain, tfTel1, tfTel2, tfTel3, tfYear, tfMonth, tfDate;
 	private MemberDTO member;
-	private JTable tableReservationList;
+	private JTable tableRoomList;
 	private DefaultTableModel modelRoomList;
 	private Vector<String> vtColName;
-	private Vector<Vector<Integer>> reservationList;
-	private JButton btnRefresh, btnCancel, btnUpdateStatus, btnLeave, btnCheckPw, btnCheckEmail, btnClear;
+	private Vector<Vector<String>> roomList;
+	private JButton btnRefresh, btnCancel, btnUpdateStatus, btnLeave, btnCheckPw, btnClear;
 	private JPanel pnlRoomList;
-	private ClientFrame main;
+	private CafeNet main;
 
-	public MyInfomation(MemberDTO member, ClientFrame main) {
+	public MyInfomation(MemberDTO member, CafeNet main) {
 		this.member = member;
 		this.main = main;
 
@@ -54,49 +51,49 @@ public class MyInfomation extends JPanel implements ActionListener {
 		setLayout(null);
 
 		JPanel pnlStatus = new JPanel();
-		pnlStatus.setBounds(12, 10, 416, 480);
+		pnlStatus.setBounds(24, 10, 416, 480);
 		add(pnlStatus);
 		pnlStatus.setLayout(null);
 
 		JLabel lblId = new JLabel("아이디");
 		lblId.setBounds(15, 32, 54, 23);
 		pnlStatus.add(lblId);
-		lblId.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblId.setFont(Setting.M_GODIC_B_17);
 
 		JLabel lblPwCurr = new JLabel("이전 비밀번호");
 		lblPwCurr.setBounds(15, 83, 122, 23);
 		pnlStatus.add(lblPwCurr);
-		lblPwCurr.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblPwCurr.setFont(Setting.M_GODIC_B_17);
 
 		JLabel lblPwNew = new JLabel("새 비밀번호");
-		lblPwNew.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblPwNew.setFont(Setting.M_GODIC_B_17);
 		lblPwNew.setBounds(15, 134, 122, 23);
 		pnlStatus.add(lblPwNew);
 
 		JLabel lblPwNewRe = new JLabel("비밀번호 재확인");
-		lblPwNewRe.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblPwNewRe.setFont(Setting.M_GODIC_B_17);
 		lblPwNewRe.setBounds(15, 186, 160, 23);
 		pnlStatus.add(lblPwNewRe);
 
 		JLabel lblName = new JLabel("이름");
 		lblName.setBounds(15, 237, 36, 23);
 		pnlStatus.add(lblName);
-		lblName.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblName.setFont(Setting.M_GODIC_B_17);
 
 		JLabel lblEmail = new JLabel("이메일");
 		lblEmail.setBounds(15, 290, 54, 23);
 		pnlStatus.add(lblEmail);
-		lblEmail.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblEmail.setFont(Setting.M_GODIC_B_17);
 
 		JLabel lblTelNum = new JLabel("전화번호");
 		lblTelNum.setBounds(12, 348, 72, 23);
 		pnlStatus.add(lblTelNum);
-		lblTelNum.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblTelNum.setFont(Setting.M_GODIC_B_17);
 
 		JLabel lblBirthDay = new JLabel("생년월일");
 		lblBirthDay.setBounds(12, 408, 72, 23);
 		pnlStatus.add(lblBirthDay);
-		lblBirthDay.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblBirthDay.setFont(Setting.M_GODIC_B_17);
 
 		tfId = new JTextField();
 		tfId.setText(member.getId());
@@ -119,7 +116,7 @@ public class MyInfomation extends JPanel implements ActionListener {
 
 		btnCheckPw = new JButton("확인");
 		btnCheckPw.setBounds(350, 185, 50, 21);
-		btnCheckPw.setFont(new Font("나눔바른고딕", Font.BOLD, 8));
+		btnCheckPw.setFont(Setting.M_GODIC_B_8);
 		pnlStatus.add(btnCheckPw);
 
 		tfName = new JTextField();
@@ -141,11 +138,6 @@ public class MyInfomation extends JPanel implements ActionListener {
 		tfEmailDomain.setBounds(270, 290, 75, 23);
 		pnlStatus.add(tfEmailDomain);
 
-		btnCheckEmail = new JButton("인증");
-		btnCheckEmail.setBounds(353, 290, 50, 21);
-		btnCheckEmail.setFont(new Font("나눔바른고딕", Font.BOLD, 8));
-		pnlStatus.add(btnCheckEmail);
-
 		tfTel1 = new JTextField();
 		tfTel1.setText(member.getTel1());
 		tfTel1.setColumns(10);
@@ -153,7 +145,7 @@ public class MyInfomation extends JPanel implements ActionListener {
 		pnlStatus.add(tfTel1);
 
 		JLabel lblHyphen = new JLabel("-");
-		lblHyphen.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblHyphen.setFont(Setting.M_GODIC_B_17);
 		lblHyphen.setBounds(237, 350, 17, 23);
 		pnlStatus.add(lblHyphen);
 
@@ -191,27 +183,27 @@ public class MyInfomation extends JPanel implements ActionListener {
 		pnlStatus.add(tfDate);
 
 		JLabel lblYear = new JLabel("년");
-		lblYear.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblYear.setFont(Setting.M_GODIC_B_17);
 		lblYear.setBounds(254, 405, 24, 23);
 		pnlStatus.add(lblYear);
 
 		JLabel lblMonth = new JLabel("월");
-		lblMonth.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblMonth.setFont(Setting.M_GODIC_B_17);
 		lblMonth.setBounds(322, 405, 24, 23);
 		pnlStatus.add(lblMonth);
 
 		JLabel lblDate = new JLabel("일");
-		lblDate.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblDate.setFont(Setting.M_GODIC_B_17);
 		lblDate.setBounds(392, 405, 24, 23);
 		pnlStatus.add(lblDate);
 
 		JLabel label = new JLabel("-");
-		label.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		label.setFont(Setting.M_GODIC_B_17);
 		label.setBounds(325, 350, 17, 23);
 		pnlStatus.add(label);
 
 		JLabel lblAt = new JLabel("@");
-		lblAt.setFont(new Font("나눔바른고딕", Font.BOLD, 12));
+		lblAt.setFont(Setting.M_GODIC_B_11);
 		lblAt.setBounds(252, 290, 24, 23);
 		pnlStatus.add(lblAt);
 
@@ -228,17 +220,17 @@ public class MyInfomation extends JPanel implements ActionListener {
 		pnlStatus.add(btnLeave);
 
 		pnlRoomList = new JPanel();
-		pnlRoomList.setBounds(467, 10, 347, 408);
+		pnlRoomList.setBounds(500, 10, 676, 408);
 		add(pnlRoomList);
 		setTable();
 
 		btnRefresh = new JButton("갱신");
-		btnRefresh.setBounds(467, 430, 163, 60);
+		btnRefresh.setBounds(805, 428, 163, 60);
 		add(btnRefresh);
 
 		btnCancel = new JButton("예약취소");
 		btnCancel.setEnabled(false);
-		btnCancel.setBounds(651, 430, 163, 60);
+		btnCancel.setBounds(980, 428, 163, 60);
 		add(btnCancel);
 
 		addEvent();
@@ -251,28 +243,34 @@ public class MyInfomation extends JPanel implements ActionListener {
 		btnCheckPw.addActionListener(this);
 		btnUpdateStatus.addActionListener(this);
 		btnLeave.addActionListener(this);
-		btnCheckEmail.addActionListener(this);
 	}
 
-	@SuppressWarnings("serial")
 	public void setTable() {
 		setTableCol(); // 테이블 컬럼명 세팅
 		getMyReservation(); // DB에서 데이터를 다 가지고 옴.
 
 		// tableModel에 컬럼명, DB에서 가져온 예약리스트를 넣음.
 		// 수정 불가능하게 막음.
-		modelRoomList = new DefaultTableModel(reservationList, vtColName) {
+		modelRoomList = new DefaultTableModel(roomList, vtColName) {
+			private static final long serialVersionUID = -341631901090117385L;
+
 			@Override
 			public boolean isCellEditable(int i, int c) {
 				return false;
 			}
 		};
-		tableReservationList = new JTable(modelRoomList); // tableModel을 Jtable에 넣음
-		tableReservationList.setRowSelectionAllowed(true);
-		tableReservationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		setAlignmentCenter(tableReservationList); // JTabel 가운데 정렬
+		tableRoomList = new JTable(modelRoomList); // tableModel을 Jtable에 넣음
+		tableRoomList.setRowSelectionAllowed(true);
+		tableRoomList.getTableHeader().setResizingAllowed(false);
+		tableRoomList.getTableHeader().setReorderingAllowed(false);
+		tableRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableRoomList.getColumn("숨김번호").setWidth(0);
+		tableRoomList.getColumn("숨김번호").setMaxWidth(0);
+		tableRoomList.getColumn("숨김번호").setMinWidth(0);
 
-		JScrollPane scroll = new JScrollPane(tableReservationList);
+		setAlignmentCenter(tableRoomList); // JTabel 가운데 정렬
+
+		JScrollPane scroll = new JScrollPane(tableRoomList);
 		scroll.setPreferredSize(new Dimension(pnlRoomList.getSize()));
 		pnlRoomList.add(scroll);
 	}
@@ -287,41 +285,24 @@ public class MyInfomation extends JPanel implements ActionListener {
 	}
 
 	public void setTableCol() {
+		String[] colNameArr = { "번호", "연도", "월", "일", "시작", "종료", "방 번호", "숨김번호" };
 		vtColName = new Vector<String>();
-		vtColName.add("연도");
-		vtColName.add("월");
-		vtColName.add("일");
-		vtColName.add("시작시간");
-		vtColName.add("종료시간");
-		vtColName.add("방 번호");
+		for (int i = 0; i < colNameArr.length; i++) {
+			vtColName.add(colNameArr[i]);
+		}
 	}
 
 	public void getMyReservation() {
-		RoomDTO room = new RoomDTO(member.getId());
-		room.setStatus(Status.GET_MY_RESERVATION);
-		try {
-			request(room);
-			while (true) {
-				Object objectReceived = null;
-				try {
-					objectReceived = main.getOis().readObject();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				if (objectReceived instanceof RoomDTO) {
-					RoomDTO roomDTO = (RoomDTO) objectReceived;
-					if (roomDTO.getStatus() == Status.GET_MY_RESERVATION) {
-						reservationList = roomDTO.getReservationList();
-						return;
-					} else {
-						return;
-					}
-				} else {
-					return;
-				}
+		RoomDTO roomDTO = new RoomDTO();
+		roomDTO.setId(member.getId());
+		roomDTO.setStatus(Status.GET_MINE);
+		main.request(roomDTO);
+		Object temp = main.response();
+		if (temp instanceof RoomDTO) {
+			roomDTO = (RoomDTO) temp;
+			if (roomDTO.getStatus() == Status.GET_MINE) {
+				roomList = roomDTO.getRoomList();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -355,44 +336,6 @@ public class MyInfomation extends JPanel implements ActionListener {
 		ptfPwNewRe.setEditable(true);
 	}
 
-	public void request(MemberDTO member) {
-		try {
-			main.getOos().writeObject(member);
-			main.getOos().flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void request(RoomDTO room) {
-		try {
-			main.getOos().writeObject(room);
-			main.getOos().flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Object response() {
-		Object objectRecieved = null;
-		while (true) {
-			try {
-				objectRecieved = main.getOis().readObject();
-				break;
-			} catch (EOFException e) {
-				objectRecieved = null;
-				break;
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				break;
-			} catch (IOException e) {
-				e.printStackTrace();
-				break;
-			}
-		}
-		return objectRecieved;
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnRefresh) { // 예약리스트 갱신
@@ -402,30 +345,34 @@ public class MyInfomation extends JPanel implements ActionListener {
 				i--;
 			}
 			getMyReservation();
-			for (int i = 0; i < reservationList.size(); i++) {
-				modelRoomList.addRow(reservationList.get(i));
+			for (int i = 0; i < roomList.size(); i++) {
+				modelRoomList.addRow(roomList.get(i));
 			}
 		} else if (e.getSource() == btnCancel) { // 예약취소
-			int rowIdx = tableReservationList.getSelectedRow();
+			int rowIdx = tableRoomList.getSelectedRow();
 			if (rowIdx == -1) {
 				JOptionPane.showMessageDialog(this, "선택한 예약 리스트가 없습니다.");
 				return;
 			}
-			int year = (Integer) tableReservationList.getValueAt(rowIdx, 0);
-			int month = (Integer) tableReservationList.getValueAt(rowIdx, 1);
-			int date = (Integer) tableReservationList.getValueAt(rowIdx, 2);
-			int inHour = (Integer) tableReservationList.getValueAt(rowIdx, 3);
-			int outHour = (Integer) tableReservationList.getValueAt(rowIdx, 4);
-			int roomNum = (Integer) tableReservationList.getValueAt(rowIdx, 5);
 
-			RoomDTO room = new RoomDTO(roomNum, member.getId(), year, month, date, inHour, outHour);
-			room.setStatus(Status.CANCEL_MY_RESERVATION);
-			request(room);
+			int seq = Integer.parseInt("" + tableRoomList.getValueAt(rowIdx, 0));
+			int subseq = Integer.parseInt("" + tableRoomList.getValueAt(rowIdx, 7));
 
-			Object temp = response();
+			// 매출 DB에서 삭제
+			System.out.println(subseq);
+			SalesDTO salesDTO = new SalesDTO(Status.DELETE_SUB);
+			salesDTO.setSubseq(subseq);
+			main.request(salesDTO);
+
+			// 룸 DB에서 삭제
+			RoomDTO room = new RoomDTO();
+			room.setSeq(seq);
+			room.setStatus(Status.DELETE);
+			main.request(room);
+			Object temp = main.response();
 			if (temp instanceof RoomDTO) {
 				room = (RoomDTO) temp;
-				if (room.getStatus() == Status.CANCEL_MY_RESERVATION) {
+				if (room.getStatus() == Status.DELETE) {
 					modelRoomList.removeRow(rowIdx);
 					btnCancel.setEnabled(false);
 					return;
@@ -434,6 +381,7 @@ public class MyInfomation extends JPanel implements ActionListener {
 					return;
 				}
 			}
+
 		} else if (e.getSource() == btnCheckPw) {
 			String pwNew = String.valueOf(ptfPwNew.getPassword());
 			String pwNewRe = String.valueOf(ptfPwNewRe.getPassword());
@@ -470,11 +418,11 @@ public class MyInfomation extends JPanel implements ActionListener {
 			}
 
 			if (btnCheckPw.isEnabled()) { // 비밀번호는 변경하지 않는경우
-				request(new MemberDTO(id, pwCurr, emailAccount, emailDomain, tel1, tel2, tel3));
+				main.request(new MemberDTO(id, pwCurr, emailAccount, emailDomain, tel1, tel2, tel3));
 			} else { // 비밀번호까지 변경하는 경우
-				request(new MemberDTO(id, pwNew, emailAccount, emailDomain, tel1, tel2, tel3));
+				main.request(new MemberDTO(id, pwNew, emailAccount, emailDomain, tel1, tel2, tel3));
 			}
-			Object temp = response();
+			Object temp = main.response();
 			if (temp instanceof MemberDTO) {
 				MemberDTO memberDTO = (MemberDTO) temp;
 				if (memberDTO.getStatus() == Status.CHANGE_MY_INFO) {
@@ -487,6 +435,33 @@ public class MyInfomation extends JPanel implements ActionListener {
 
 		} else if (e.getSource() == btnClear) { // 다시 입력
 			clear();
+		} else if (e.getSource() == btnLeave) {
+			JPasswordField ptfPw = new JPasswordField();
+			int answer = JOptionPane.showConfirmDialog(this, ptfPw, "비밀번호 확인", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE);
+			if (answer == JOptionPane.OK_OPTION) {
+				String pw = String.valueOf(ptfPw.getPassword());
+				if (pw.equals(member.getPw())) {
+					LoginDTO loginDTO = new LoginDTO(member.getId(), Status.LEAVE);
+					main.request(loginDTO);
+					Object temp = main.response();
+					if (temp instanceof LoginDTO) {
+						loginDTO = (LoginDTO) temp;
+						if (loginDTO.getStatus() == Status.LEAVE) {
+							JOptionPane.showMessageDialog(this, "성공적으로 탈퇴처리 되었습니다.");
+							main.request(new LoginDTO(member.getId(), Status.LOGOUT));
+							new Login();
+							// 메인을 꺼야함
+						} else {
+							return;
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(this, "비밀번호가 틀립니다.");
+				}
+			} else {
+				return;
+			}
 		}
 	}
 }

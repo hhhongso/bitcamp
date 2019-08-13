@@ -48,7 +48,7 @@ public class RoomDAO {
 	}
 
 	public int insert(RoomDTO room) {
-		int cnt = 0;
+		int subseq = 0;
 
 		String id = room.getId();
 		int roomNum = room.getRoomNum();
@@ -57,9 +57,10 @@ public class RoomDAO {
 		int date = room.getDate();
 		int inHour = room.getInHour();
 		int outHour = room.getOutHour();
+		int price = room.getPrice();
 
 		getConnection();
-		String sql = "INSERT INTO CAFE_ROOMRESERVATION VALUES(?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO CAFE_ROOMRESERVATION VALUES(SEQ_ROOM.nextVAL,?,?,?,?,?,?,?,?,SUBSEQ_ROOM.nextVAL)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
@@ -69,20 +70,30 @@ public class RoomDAO {
 			pstmt.setInt(5, date);
 			pstmt.setInt(6, inHour);
 			pstmt.setInt(7, outHour);
+			pstmt.setInt(8, price);
 
-			cnt = pstmt.executeUpdate();
+			subseq = pstmt.executeUpdate();
+
+			sql = "SELECT SUBSEQ_ROOM.CURRVAL AS subseq FROM DUAL";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				subseq = rs.getInt("subseq");
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			disconnection(false);
 		}
-		return cnt;
+		return subseq;
 	}
 
 	public boolean hasSameReservation(RoomDTO room) {
 		boolean result = false;
 		getConnection();
-		String sql = "SELECT FROM CAFE_ROOMRESERVATION WHERE ROOM_NUM = ? AND ROOM_YEAR = ? AND ROOM_MONTH = ? AND ROOM_DATE = ? AND INHOUR = ? AND OUTHOUR = ?";
+		String sql = "SELECT * FROM CAFE_ROOMRESERVATION WHERE ROOM_NUM = ? AND ROOM_YEAR = ? AND ROOM_MONTH = ? AND ROOM_DATE = ? AND INHOUR = ? AND OUTHOUR = ?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, room.getRoomNum());
@@ -129,7 +140,7 @@ public class RoomDAO {
 				int inHour = rs.getInt("inhour");
 				int outHour = rs.getInt("outHour");
 
-				roomList.add(new RoomDTO(roomNum, id, year, month, date, inHour, outHour));
+				roomList.add(new RoomDTO(roomNum, id, year, month, date, inHour, outHour, 0));
 			}
 
 		} catch (SQLException e) {
@@ -140,9 +151,9 @@ public class RoomDAO {
 		return roomList;
 	}
 
-	public Vector<Vector<Integer>> getMyReservation(String id) {
-		Vector<Vector<Integer>> roomList = new Vector<Vector<Integer>>();
-		Vector<Integer> room = null;
+	public Vector<Vector<String>> getMyList(String id) {
+		Vector<Vector<String>> roomList = new Vector<Vector<String>>();
+		Vector<String> room = null;
 		getConnection();
 		String sql = "SELECT * FROM CAFE_ROOMRESERVATION WHERE ID = ? ORDER BY room_year, room_month, room_date, inhour, outHour";
 		try {
@@ -151,13 +162,15 @@ public class RoomDAO {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				room = new Vector<Integer>();
-				room.add(rs.getInt("room_year"));
-				room.add(rs.getInt("room_month"));
-				room.add(rs.getInt("room_date"));
-				room.add(rs.getInt("inhour"));
-				room.add(rs.getInt("outHour"));
-				room.add(rs.getInt("room_num"));
+				room = new Vector<String>();
+				room.add("" + rs.getInt("seq"));
+				room.add("" + rs.getInt("room_year"));
+				room.add("" + rs.getInt("room_month"));
+				room.add("" + rs.getInt("room_date"));
+				room.add("" + rs.getInt("inhour"));
+				room.add("" + rs.getInt("outHour"));
+				room.add("" + rs.getInt("room_num"));
+				room.add("" + rs.getInt("subseq"));
 				roomList.add(room);
 			}
 		} catch (SQLException e) {
@@ -168,28 +181,48 @@ public class RoomDAO {
 		return roomList;
 	}
 
-	public int cancelReservation(RoomDTO room) {
+	public int delete(RoomDTO room) {
 		int cnt = 0;
 		getConnection();
-		String sql = "DELETE FROM CAFE_ROOMRESERVATION WHERE ID = ? AND ROOM_NUM = ? AND ROOM_YEAR = ? AND ROOM_MONTH = ? AND ROOM_DATE = ? AND INHOUR = ? AND OUTHOUR =?";
+		String sql = "DELETE FROM CAFE_ROOMRESERVATION WHERE seq = ?";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, room.getId());
-			pstmt.setInt(2, room.getRoomNum());
-			pstmt.setInt(3, room.getYear());
-			pstmt.setInt(4, room.getMonth());
-			pstmt.setInt(5, room.getDate());
-			pstmt.setInt(6, room.getInHour());
-			pstmt.setInt(7, room.getOutHour());
-
+			pstmt.setInt(1, room.getSeq());
 			cnt = pstmt.executeUpdate();
-			System.out.println(cnt);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			disconnection(false);
 		}
 		return cnt;
+	}
+
+	public Vector<Vector<String>> getAllList() {
+		Vector<Vector<String>> roomList = new Vector<Vector<String>>();
+		Vector<String> room = null;
+		getConnection();
+		String sql = "SELECT seq, id, room_num, room_year||'년 '||room_month||'월 '||room_date||'일' as day, inhour, outhour \r\n"
+				+ "FROM CAFE_ROOMRESERVATION\r\n" + "ORDER BY day desc, inhour desc, outhour desc, room_num";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				room = new Vector<String>();
+				room.add("" + rs.getInt("seq"));
+				room.add(rs.getString("id"));
+				room.add("" + rs.getInt("room_num"));
+				room.add(rs.getString("day"));
+				room.add("" + rs.getInt("inhour"));
+				room.add("" + rs.getInt("outhour"));
+				roomList.add(room);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnection(true);
+		}
+		return roomList;
 	}
 
 	public void disconnection(boolean isSelect) {

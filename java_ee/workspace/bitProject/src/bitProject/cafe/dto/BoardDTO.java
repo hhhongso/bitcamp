@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import bitProject.cafe.dao.Status;
 
-public class BoardDTO implements Serializable {
+public class BoardDTO implements Serializable, CafeDTO {
 	/**
 	 * 
 	 */

@@ -5,24 +5,28 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import bitProject.cafe.Setting;
+
 public class ChatServer {
-	
+
 	private ServerSocket ss;
-	private Socket socket;
+	private ArrayList<ChatHandler> list;
 
 	public ChatServer() {
-		try{
-			ss = new ServerSocket(10201);
+		try {
+			ss = new ServerSocket(Setting.CHAT_PORT);
 			System.out.println("서버준비완료");
-			
-			while(true){
+
+			list = new ArrayList<ChatHandler>();
+
+			while (true) {
 				Socket socket = ss.accept();
-				ChatHandler handler = new ChatHandler(socket); // 스레드 생성
+				ChatHandler handler = new ChatHandler(socket, list); // 스레드 생성
 				handler.start();
-				//스레드 시작
-			
-			}//while
-		}catch(IOException ioe){
+
+				list.add(handler);
+			}
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
@@ -31,5 +35,3 @@ public class ChatServer {
 		new ChatServer();
 	}
 }
-
-

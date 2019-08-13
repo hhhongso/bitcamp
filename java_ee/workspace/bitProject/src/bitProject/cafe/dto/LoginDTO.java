@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import bitProject.cafe.dao.Status;
 
-public class LoginDTO implements Serializable {
+public class LoginDTO implements Serializable, CafeDTO {
 
 	private static final long serialVersionUID = -3398789852219044576L;
 	private String id;
@@ -12,6 +12,7 @@ public class LoginDTO implements Serializable {
 	private String emailAccount;
 	private String emailDomain;
 	private Status status;
+	private int staff;
 
 	public LoginDTO(String id, Status status) {
 		this.id = id;
@@ -29,6 +30,21 @@ public class LoginDTO implements Serializable {
 		this.emailAccount = emailAccount;
 		this.emailDomain = emailDomain;
 		status = Status.SEND_EMAIL;
+	}
+
+	public LoginDTO(String id, Status status, int staff) {
+		super();
+		this.id = id;
+		this.status = status;
+		this.staff = staff;
+	}
+
+	public int getStaff() {
+		return staff;
+	}
+
+	public void setStaff(int staff) {
+		this.staff = staff;
 	}
 
 	public String getEmailAccount() {

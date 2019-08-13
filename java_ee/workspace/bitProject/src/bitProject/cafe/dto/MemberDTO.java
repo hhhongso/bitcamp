@@ -1,13 +1,11 @@
 package bitProject.cafe.dto;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 import bitProject.cafe.dao.Status;
 
-public class MemberDTO implements Serializable {
-	/**
-	 * 
-	 */
+public class MemberDTO implements Serializable, CafeDTO {
 	private static final long serialVersionUID = 5357461459330133901L;
 	private String id;
 	private String pw;
@@ -21,7 +19,12 @@ public class MemberDTO implements Serializable {
 	private int birthMonth;
 	private int birthDate;
 	private boolean isStaff;
+	private Vector<Vector<String>> memberList;
 	private Status status;
+
+	public MemberDTO() {
+		super();
+	}
 
 	public MemberDTO(String id, String pw, String name, String emailAccount, String emailDomain, String tel1,
 			String tel2, String tel3, int birthYear, int birthMonth, int birthDate) {
@@ -38,7 +41,15 @@ public class MemberDTO implements Serializable {
 		this.birthMonth = birthMonth;
 		this.birthDate = birthDate;
 		isStaff = false;
-		status = Status.LOGIN;
+		status = Status.WELCOME;
+	}
+
+	public Vector<Vector<String>> getMemberList() {
+		return memberList;
+	}
+
+	public void setMemberList(Vector<Vector<String>> memberList) {
+		this.memberList = memberList;
 	}
 
 	public MemberDTO(String name, Status status) {

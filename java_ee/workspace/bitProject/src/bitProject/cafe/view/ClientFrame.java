@@ -3,7 +3,6 @@ package bitProject.cafe.view;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -12,7 +11,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -23,14 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import bitProject.cafe.Setting;
 import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.CafeDTO;
 import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 
-public class ClientFrame extends JFrame implements ActionListener, Runnable {
-	/**
-	 * 
-	 */
+public class ClientFrame extends JFrame implements ActionListener, Runnable, CafeNet {
 	private static final long serialVersionUID = 6815773521340214556L;
 	private MemberDTO member;
 	private JPanel mainPanel; // 전체를 감싸는 패널
@@ -50,10 +47,11 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 	// 카드레이아웃 컨트롤
 	private JPanel pnlMenuWrap; // Card 레이아웃 잡혀있는 패널
 	private CardLayout card; // Card 컨트롤
-	private RoomReservation roomReservation;
+	private ClientStudy roomReservation;
 	private MyInfomation myInfomation;
 	private Board board;
-	private Order order = new Order();
+	private ChatRoom chatRoom;
+	private ClientOrder order;
 
 	// 네트워킹
 	private Socket socket;
@@ -86,12 +84,12 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 
 		lblId = new JLabel(member.getName());
 		lblId.setHorizontalAlignment(SwingConstants.CENTER);
-		lblId.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblId.setFont(Setting.M_GODIC_B_17);
 		lblId.setBounds(12, 23, 161, 52);
 
 		JLabel lblExpression = new JLabel("님 로그인");
 		lblExpression.setHorizontalAlignment(SwingConstants.CENTER);
-		lblExpression.setFont(new Font("나눔바른고딕", Font.BOLD, 13));
+		lblExpression.setFont(Setting.M_GODIC_B_13);
 		lblExpression.setBounds(154, 23, 99, 52);
 
 		btnLogOut = new JButton("Log Out");
@@ -110,6 +108,8 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 			btnMenuArr[i] = new JButton(btnMenusName[i]);
 			btnMenuArr[i].setPreferredSize(new Dimension(sizeBtn - 5, sizeBtn - 5));
 			btnMenuArr[i].addActionListener(this);
+			btnMenuArr[i].setBackground(Color.WHITE);
+			btnMenuArr[i].setForeground(Color.BLACK);
 			pnlSlider.add(btnMenuArr[i]);
 		}
 		pnlSlider.setBounds(0, 0, sizeBtn * btnMenuArr.length, 160);
@@ -127,7 +127,7 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 
 		LblClock lblClock = new LblClock();
 		lblClock.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblClock.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
+		lblClock.setFont(Setting.M_GODIC_B_17);
 		lblClock.setBounds(1099, 25, 136, 30);
 
 		mainPanel.add(pnlStatus);
@@ -147,41 +147,25 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Object temp = null;
-				try {
-					request(new MemberDTO(member.getName(), Status.LOGOUT));
-					while (true) {
-						temp = ois.readObject();
-						if (temp instanceof MemberDTO) {
-							MemberDTO memberDTO = (MemberDTO) temp;
-							if (memberDTO.getStatus() == Status.LOGOUT) {
-								oos.close();
-								ois.close();
-								socket.close();
-								System.exit(0);
-							}
-						} else {
-							return;
-						}
+				chatRoom.closeChatRoom();
+				request(new MemberDTO(member.getName(), Status.LOGOUT));
+				Object temp = response();
+				if (temp instanceof MemberDTO) {
+					MemberDTO memberDTO = (MemberDTO) temp;
+					if (memberDTO.getStatus() == Status.LOGOUT) {
+						disconnect();
+						System.exit(0);
 					}
-				} catch (EOFException e1) {
-					temp = null;
+				} else {
 					return;
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
 				}
 			}
 		});
 	}
 
 	public void connectToServer() {
-		String serverIP = null;
 		try {
-			serverIP = "192.168.0.44";
-			socket = new Socket(serverIP, 10200);
-
+			socket = new Socket(Setting.SERVER_IP, Setting.PORT);
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (UnknownHostException e) {
@@ -199,14 +183,16 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 		card = new CardLayout();
 		pnlMenuWrap.setLayout(card);
 		pnlMenuWrap.setBounds(25, 250, 1210, 500);
-		// 문제가 생김.
 		myInfomation = new MyInfomation(member, this);
-		roomReservation = new RoomReservation(member, this);
+		roomReservation = new ClientStudy(member, this);
 		board = new Board(member, this);
+		chatRoom = new ChatRoom(member);
+		order = new ClientOrder(member, this);
 
 		pnlMenuWrap.add(board, "board");
 		pnlMenuWrap.add(roomReservation, "roomReservation");
 		pnlMenuWrap.add(order, "order");
+		pnlMenuWrap.add(chatRoom, "chatRoom");
 		pnlMenuWrap.add(myInfomation, "myInfomation");
 
 		mainPanel.add(pnlMenuWrap);
@@ -236,73 +222,47 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 			}
 			pnlSlider.setLocation(sliderX, 0);
 		} else if (e.getSource() == btnMenuArr[0]) { // 홈으로 가기
-			card.next(pnlMenuWrap);
+			btnColorChange(0);
 			card.show(pnlMenuWrap, "board");
 		} else if (e.getSource() == btnMenuArr[1]) { // 스터디룸 예약
-			card.next(pnlMenuWrap);
+			btnColorChange(1);
 			card.show(pnlMenuWrap, "roomReservation");
 		} else if (e.getSource() == btnMenuArr[2]) { // 주문 하러 가기
-			card.next(pnlMenuWrap);
+			btnColorChange(2);
 			card.show(pnlMenuWrap, "order");
-		} else if (e.getSource() == btnMenuArr[3]) {
-			System.out.println("아직 갖추어지지 않음");
-		} else if (e.getSource() == btnMenuArr[4]) {
-			card.next(pnlMenuWrap);
+		} else if (e.getSource() == btnMenuArr[3]) { // 문의하기
+			btnColorChange(3);
+			card.show(pnlMenuWrap, "chatRoom");
+			chatRoom.callChatRoom(member);
+		} else if (e.getSource() == btnMenuArr[4]) { // 개인정보
+			btnColorChange(4);
 			card.show(pnlMenuWrap, "myInfomation");
-		} else if (e.getSource() == btnLogOut) {
+		} else if (e.getSource() == btnLogOut) { // 로그아웃
+			chatRoom.closeChatRoom();
 			request(new LoginDTO(member.getName(), Status.LOGOUT));
 			Object temp = response();
 			if (temp instanceof LoginDTO) {
 				LoginDTO login = (LoginDTO) temp;
 				if (login.getStatus() == Status.LOGOUT) {
-					try {
-						oos.close();
-						ois.close();
-						socket.close();
-						new Login();
-						this.dispose();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					disconnect();
+					new Login();
+					this.dispose();
 				}
 			}
 		}
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+	}
+
+	@Override
 	public void run() {
 		request(member);
-		while (true) {
-
-		}
 	}
 
-	public ObjectInputStream getOis() {
-		return ois;
-	}
-
-	public ObjectOutputStream getOos() {
-		return oos;
-	}
-
-	public void request(LoginDTO login) {
-		try {
-			oos.writeObject(login);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void request(MemberDTO member) {
-		try {
-			oos.writeObject(member);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	@Override
 	public Object response() {
 		Object objectRecieved = null;
 		while (true) {
@@ -323,18 +283,41 @@ public class ClientFrame extends JFrame implements ActionListener, Runnable {
 		return objectRecieved;
 	}
 
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ClientFrame frame = new ClientFrame(new MemberDTO("gildong", "pw", "홍길동", "honggilddong", "gmail.com",
-//							"010", "1111", "2222", 1991, 1, 1, false, false));
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	@Override
+	public void disconnect() {
+		try {
+			if (oos != null)
+				oos.close();
+			if (ois != null)
+				ois.close();
+			if (socket != null)
+				socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void request(CafeDTO cafeDTO) {
+		try {
+			oos.writeObject(cafeDTO);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void btnColorChange(int idx) {
+		for (int i = 0; i < btnMenuArr.length; i++) {
+			if (i == idx) {
+				btnMenuArr[i].setBackground(Color.BLACK);
+				btnMenuArr[i].setForeground(Color.WHITE);
+			} else {
+				btnMenuArr[i].setBackground(Color.WHITE);
+				btnMenuArr[i].setForeground(Color.BLACK);
+			}
+		}
+	}
 
 }

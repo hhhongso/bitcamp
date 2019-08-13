@@ -4,8 +4,6 @@ package bitProject.cafe.view;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -16,39 +14,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import bitProject.cafe.Setting;
 import bitProject.cafe.dao.Status;
 import bitProject.cafe.dto.BoardDTO;
 
 public class BoardDialog extends JDialog implements ActionListener {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 19310253510009307L;
 	private JPanel pnlMain, btnPane;
 	private JLabel lblId, lblId2, lblText;
 	private JTextField tfText;
 	private JButton btnWrite, btnCancle;
 
-	private ClientFrame main;
+	private CafeNet main;
 	private Board board;
 
-	public BoardDialog(ClientFrame main, Board board) {
+	public BoardDialog(CafeNet main, Board board) {
 		this.main = main;
 		this.board = board;
 
 		// 라벨
 		lblId = new JLabel("작성자");
+		lblId.setFont(Setting.M_GODIC_B_13);
 		lblId.setBounds(43, 26, 57, 15);
 
 		lblText = new JLabel("내용");
+		lblText.setFont(Setting.M_GODIC_B_13);
 		lblText.setBounds(53, 63, 57, 15);
 
 		lblId2 = new JLabel(board.getMember().getId()); // MemberDTO의 ID를 받아온다
+		lblId2.setFont(Setting.M_GODIC_B_13);
 		lblId2.setBounds(117, 26, 57, 15);
 
 		// 게시글 내용 입력 받기
 		tfText = new JTextField();
+		tfText.setFont(Setting.M_GODIC_B_11);
 		tfText.setBounds(117, 57, 282, 27);
 		tfText.setColumns(10);
 
@@ -64,8 +63,10 @@ public class BoardDialog extends JDialog implements ActionListener {
 
 		// 작성/취소 버튼
 		btnWrite = new JButton("작성");
+		btnWrite.setFont(Setting.M_GODIC_B_13);
 		btnWrite.setActionCommand("OK");
 		btnCancle = new JButton("취소");
+		btnCancle.setFont(Setting.M_GODIC_B_13);
 		btnCancle.setActionCommand("Cancel");
 
 		btnPane = new JPanel();
@@ -99,67 +100,31 @@ public class BoardDialog extends JDialog implements ActionListener {
 			if (text.length() < 1) {
 				JOptionPane.showMessageDialog(this, "글을 입력해주세요.");
 			} else {
-				try {
-					BoardDTO boardDTO = new BoardDTO(board.getMember().getId(), text, writeTime);
-					boardDTO.setStatus(Status.WRITE_BOARD);
-					main.getOos().writeObject(boardDTO);
-					main.getOos().flush();
+				BoardDTO boardDTO = new BoardDTO(board.getMember().getId(), text, writeTime);
+				boardDTO.setStatus(Status.WRITE_BOARD);
+				main.request(boardDTO);
 
-					while (true) {
-						Object objectRecieved = null;
-						try {
-							objectRecieved = main.getOis().readObject();
-						} catch (EOFException e1) {
-							objectRecieved = null;
+				Object temp = main.response();
+				if (temp instanceof BoardDTO) {
+					boardDTO = (BoardDTO) temp;
+					if (boardDTO.getStatus() == Status.WRITE_BOARD) {
+						for (int i = 0; i < board.getModelBoardList().getRowCount(); i++) { // 전부삭제
+							board.getModelBoardList().removeRow(i);
+							i--;
 						}
-						if (objectRecieved instanceof BoardDTO) {
-							boardDTO = (BoardDTO) objectRecieved;
-							if (boardDTO.getStatus() == Status.WRITE_BOARD) {
-								for (int i = 0; i < board.getModelBoardList().getRowCount(); i++) { // 전부삭제
-									board.getModelBoardList().removeRow(i);
-									i--;
-								}
-								board.setBoardList(boardDTO.getBoardList());
-								for (int i = 0; i < board.getBoardList().size(); i++) { // Board쪽에 DB에서 가져온 모든 것을 업데이트.
-									board.getModelBoardList().addRow(board.getBoardList().get(i));
-								}
-							}
-							setVisible(false);
-							return;
-						} else {
-							return;
+						board.setBoardList(boardDTO.getBoardList());
+						for (int i = 0; i < board.getBoardList().size(); i++) { // Board쪽에 DB에서 가져온 모든 것을 업데이트.
+							board.getModelBoardList().addRow(board.getBoardList().get(i));
 						}
 					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
+					this.dispose();
+					return;
+				} else {
+					return;
 				}
 			}
-
-//			if (!text.equals("")) { // 공백을 입력하지 않았을 때
-//				BoardDTO dto = new BoardDTO();
-//				dto.setSeq("0"); // 임시로 0으로 해놓았습니다. DB에서 시퀀스를 받아서 줄 수 있다면 좋겠습니다
-//				dto.setText(text);
-//				dto.setId(member.getId());
-//				dto.setDateWrite(writeTime);
-//
-//				listBoard.add(dto); // BoardDTO 객체를 가지고 있는 ArrayList입니다. DB연결 때는 이걸 이용하세요
-//
-//				vList = new Vector<Object>(); // JTable에는 열 별로 vector로 추가한다.
-//				vList.addElement(dto.getSeq());
-//				vList.addElement(dto.getText());
-//				vList.addElement(dto.getId());
-//				vList.addElement(dto.getDateWrite());
-//				model.addRow(vList);
-//
-//				setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//				setVisible(false);
-//			} else {
-//				JOptionPane.showMessageDialog(this, "내용을 입력하지 않았습니다", "게시물 작성 오류", JOptionPane.WARNING_MESSAGE);
-//			}
 		} else if (e.getSource() == btnCancle) {
-			setVisible(false);
+			this.dispose();
 		}
 	}
 }

@@ -19,11 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import bitProject.cafe.Setting;
 import bitProject.cafe.dao.Status;
 import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
-
-import java.awt.Font;
 
 public class Join extends JFrame implements ActionListener {
 
@@ -57,42 +56,42 @@ public class Join extends JFrame implements ActionListener {
 		contentPane.add(lblTitle);
 
 		JLabel lblId = new JLabel("아이디");
-		lblId.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblId.setFont(Setting.M_GODIC_B_13);
 		lblId.setBounds(37, 59, 57, 15);
 		contentPane.add(lblId);
 
 		JLabel lblPw = new JLabel("비밀번호");
-		lblPw.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblPw.setFont(Setting.M_GODIC_B_13);
 		lblPw.setBounds(37, 108, 57, 15);
 		contentPane.add(lblPw);
 
 		JLabel lblPwRe = new JLabel("비밀번호 재확인");
-		lblPwRe.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblPwRe.setFont(Setting.M_GODIC_B_13);
 		lblPwRe.setBounds(37, 137, 100, 15);
 		contentPane.add(lblPwRe);
 
 		JLabel lblName = new JLabel("이름");
-		lblName.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblName.setFont(Setting.M_GODIC_B_13);
 		lblName.setBounds(37, 187, 57, 15);
 		contentPane.add(lblName);
 
 		JLabel lblEmail = new JLabel("이메일");
-		lblEmail.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblEmail.setFont(Setting.M_GODIC_B_13);
 		lblEmail.setBounds(37, 222, 57, 15);
 		contentPane.add(lblEmail);
 
 		JLabel lblTel = new JLabel("전화번호");
-		lblTel.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblTel.setFont(Setting.M_GODIC_B_13);
 		lblTel.setBounds(37, 292, 57, 15);
 		contentPane.add(lblTel);
 
 		JLabel lblBirthday = new JLabel("생년월일");
-		lblBirthday.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblBirthday.setFont(Setting.M_GODIC_B_13);
 		lblBirthday.setBounds(37, 324, 57, 15);
 		contentPane.add(lblBirthday);
 
 		lblAgree = new JLabel("개인정보 동의 안내 (필수)");
-		lblAgree.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblAgree.setFont(Setting.M_GODIC_B_11);
 		lblAgree.setBounds(37, 369, 148, 15);
 		contentPane.add(lblAgree);
 
@@ -154,6 +153,10 @@ public class Join extends JFrame implements ActionListener {
 		contentPane.add(scroll);
 
 		JTextArea taExpression = new JTextArea();
+		taExpression.setText(
+				" 1. 수집하는 개인정보 : 이름, 이메일, 생년월일, 전화번호 \n 2. 목적 :  예약자 확인, 예약확인 안내메일 발송 \n   * 동의하지 않을 경우 회원가입 불가 ");
+		taExpression.setFont(Setting.M_GODIC_N_13);
+		taExpression.setEditable(false);
 		scroll.setViewportView(taExpression);
 
 		cbAgree = new JCheckBox("동의");
@@ -217,7 +220,7 @@ public class Join extends JFrame implements ActionListener {
 		contentPane.add(lblDate);
 
 		JLabel lblCode = new JLabel("인증코드");
-		lblCode.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		lblCode.setFont(Setting.M_GODIC_B_13);
 		lblCode.setBounds(37, 255, 57, 15);
 		contentPane.add(lblCode);
 
@@ -226,12 +229,12 @@ public class Join extends JFrame implements ActionListener {
 		contentPane.add(btnEmailCode);
 
 		JLabel lblIdExpression = new JLabel("아이디는 영문, 숫자로 이뤄진 5 ~ 12자만 가능합니다.");
-		lblIdExpression.setFont(new Font("나눔고딕", Font.PLAIN, 10));
+		lblIdExpression.setFont(Setting.M_GODIC_N_11);
 		lblIdExpression.setBounds(37, 84, 388, 15);
 		contentPane.add(lblIdExpression);
 
 		JLabel lblPwExepression = new JLabel("비밀번호는 영문, 숫자로 이루어진 7 ~ 15자만 가능합니다.");
-		lblPwExepression.setFont(new Font("나눔고딕", Font.PLAIN, 10));
+		lblPwExepression.setFont(Setting.M_GODIC_N_11);
 		lblPwExepression.setBounds(37, 162, 388, 15);
 		contentPane.add(lblPwExepression);
 

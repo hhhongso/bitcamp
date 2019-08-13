@@ -21,15 +21,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import bitProject.cafe.Setting;
 import bitProject.cafe.dao.Status;
+import bitProject.cafe.dto.CafeDTO;
 import bitProject.cafe.dto.LoginDTO;
 import bitProject.cafe.dto.MemberDTO;
 
-public class Login extends JFrame implements ActionListener {
+public class Login extends JFrame implements ActionListener, CafeNet {
 
 	private static final long serialVersionUID = -883731442213980503L;
-	private static final String SERVER_IP = "192.168.0.44";
-	private static final int PORT = 10200;
 
 	private JButton btnLogin;
 	private JButton btnClear;
@@ -100,7 +100,6 @@ public class Login extends JFrame implements ActionListener {
 		c.add(btnClear);
 		c.add(btnJoin);
 		c.add(btnFind);
-
 		connectToServer();
 
 		// 로그인 라벨, 필드 생성 및 배치 종료
@@ -109,28 +108,14 @@ public class Login extends JFrame implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Object temp = null;
-				try {
-					oos.writeObject(new LoginDTO("", Status.FAILURE));
-					oos.flush();
-					while (true) {
-						temp = ois.readObject();
-						if (temp instanceof LoginDTO) {
-							LoginDTO loginDTO = (LoginDTO) temp;
-							if (loginDTO.getStatus() == Status.FAILURE) {
-								oos.close();
-								ois.close();
-								socket.close();
-								System.exit(0);
-							}
-						}
+				request(new LoginDTO("", Status.FAILURE));
+				Object temp = response();
+				if (temp instanceof LoginDTO) {
+					LoginDTO loginDTO = (LoginDTO) temp;
+					if (loginDTO.getStatus() == Status.FAILURE) {
+						disconnect();
+						System.exit(0);
 					}
-				} catch (EOFException eofe) {
-					temp = null;
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
 				}
 			}
 		});
@@ -139,49 +124,81 @@ public class Login extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnLogin) {
-			String inputId = tfId.getText();
-			String inputPw = String.valueOf(ptfPw.getPassword());
-			LoginDTO login = new LoginDTO(inputId, inputPw, Status.LOGIN);
-			Object temp = null;
+			String id = tfId.getText();
+			String pw = String.valueOf(ptfPw.getPassword());
 
-			try {
-				oos.writeObject(login);
-				oos.flush();
+			if (id.length() < 1 || pw.length() < 1) {
+				JOptionPane.showMessageDialog(this, "아이디, 비밀번호를 입력해주세요.");
+			}
 
-				while (true) {
-					try {
-						temp = ois.readObject();
-						if (temp instanceof MemberDTO) {
-							MemberDTO member = (MemberDTO) temp;
-							if (member.getStatus() == Status.LOGIN) {
-								ClientFrame cf = new ClientFrame(member);
-								cf.setVisible(true);
-								this.setVisible(false);
-								break;
-							} else if (member.getStatus() == Status.FAILURE) {
-								JOptionPane.showMessageDialog(this, "아이디, 또는 비밀번호가 일치하지 않습니다.");
-								break;
-							}
-						} else {
-							break;
-						}
-					} catch (EOFException e1) {
-						temp = null;
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
+			if (rbtnStaff.isSelected()) { // 스태프일 때
+				LoginDTO login = new LoginDTO(id, pw, Status.LOGIN_STAFF);
+				request(login);
+				Object temp = response();
+				if (temp instanceof MemberDTO) {
+					MemberDTO memberDTO = (MemberDTO) temp;
+					if (memberDTO.getStatus() == Status.LOGIN_STAFF) {
+						disconnect();
+						StaffFrame sf = new StaffFrame(memberDTO);
+						sf.setVisible(true);
+						this.dispose();
+					} else if (memberDTO.getStatus() == Status.FAILURE) {
+						JOptionPane.showMessageDialog(this, "아이디, 또는 비밀번호가 일치하지 않습니다.");
 					}
+				} else {
+					return;
 				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} else { // 클라이언트일 때.
+				LoginDTO login = new LoginDTO(id, pw, Status.LOGIN_CLIENT);
+				request(login);
+				Object temp = response();
+				if (temp instanceof MemberDTO) {
+					MemberDTO member = (MemberDTO) temp;
+					if (member.getStatus() == Status.LOGIN_CLIENT) {
+						disconnect();
+						ClientFrame cf = new ClientFrame(member);
+						cf.setVisible(true);
+						this.dispose();
+					} else if (member.getStatus() == Status.FAILURE) {
+						JOptionPane.showMessageDialog(this, "아이디, 또는 비밀번호가 일치하지 않습니다.");
+					}
+				} else {
+					return;
+				}
 			}
 		} else if (e.getSource() == btnJoin) {
 			new Join(this);
+		} else if (e.getSource() == rbtnStaff) {
+			String id = tfId.getText();
+
+			if (id.length() < 1) {
+				JOptionPane.showMessageDialog(this, "존재하지 않는 스태프 아이디입니다.");
+				rbtnClient.setSelected(true);
+				return;
+			}
+
+			LoginDTO loginDTO = new LoginDTO(id, Status.STAFF);
+			request(loginDTO);
+			Object temp = response();
+			if (temp instanceof LoginDTO) {
+				loginDTO = (LoginDTO) temp;
+				if (loginDTO.getStatus() == Status.FAILURE) {
+					JOptionPane.showMessageDialog(this, "존재하지 않는 스태프 아이디입니다.");
+					rbtnClient.setSelected(true);
+					return;
+				}
+			}
+		} else if (e.getSource() == btnClear) {
+			clear();
+		} else if (e.getSource() == btnFind) {
+			new Find(this);
 		}
 	}
 
+	@Override
 	public void connectToServer() {
 		try {
-			socket = new Socket(SERVER_IP, PORT);
+			socket = new Socket(Setting.SERVER_IP, Setting.PORT);
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
 		} catch (UnknownHostException e) {
@@ -196,39 +213,26 @@ public class Login extends JFrame implements ActionListener {
 		btnClear.addActionListener(this);
 		btnJoin.addActionListener(this);
 		btnFind.addActionListener(this);
+		rbtnStaff.addActionListener(this);
 	}
 
 	public void clear() {
 		tfId.setText("");
 		ptfPw.setText("");
+		rbtnClient.setSelected(true);
 	}
 
-	public ObjectInputStream getOis() {
-		return ois;
-	}
-
-	public ObjectOutputStream getOos() {
-		return oos;
-	}
-
-	public void request(MemberDTO member) {
+	@Override
+	public void request(CafeDTO cafe) {
 		try {
-			oos.writeObject(member);
+			oos.writeObject(cafe);
 			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void request(LoginDTO login) {
-		try {
-			oos.writeObject(login);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	@Override
 	public Object response() {
 		Object objectRecieved = null;
 
@@ -248,6 +252,20 @@ public class Login extends JFrame implements ActionListener {
 			}
 		}
 		return objectRecieved;
+	}
+
+	@Override
+	public void disconnect() {
+		try {
+			if (oos != null)
+				oos.close();
+			if (ois != null)
+				ois.close();
+			if (socket != null)
+				socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -99,14 +99,13 @@ public class BoardDAO {
 		return boardList;
 	}
 
-	public int deleteBoard(BoardDTO board) {
+	public int delete(BoardDTO board) {
 		int cnt = 0;
 		getConnection();
-		String sql = "DELETE FROM CAFE_BOARD WHERE BOARD_SEQ = ? AND ID = ?";
+		String sql = "DELETE FROM CAFE_BOARD WHERE BOARD_SEQ = ?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, board.getSeq());
-			pstmt.setString(2, board.getId());
 			cnt = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
